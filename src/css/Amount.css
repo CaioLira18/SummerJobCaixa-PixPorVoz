@@ -1,0 +1,80 @@
+.amountContainer {
+    width: 80%;
+    /* Mantido */
+    margin: -30px auto 0; /* Margem negativa no topo para subir, centralizado horizontalmente */    /* Mantido */
+    border: none;
+    /* Removido o preto para ficar como a foto */
+    background-color: #f2f2f2;
+    /* Cor de fundo cinza clara da foto */
+    border-radius: 10px;
+    /* Mantido */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    /* Sombra leve para profundidade */
+    position: relative;
+}
+
+.amount {
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.amount span {
+    color: rgb(70, 70, 70);
+    font-size: 8px;
+    /* Mantido */
+}
+
+.amount h4 {
+    font-size: 15px;
+    /* Mantido */
+    color: black;
+    margin: 5px 0;
+    /* Pequeno ajuste de respiro */
+}
+
+.amountBox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 15px;
+}
+
+.iconAngle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #005a96;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    color: #005a96;
+}
+
+.openFinance {
+    font-size: 10px;
+    /* Mantido */
+    padding: 12px 10px;
+    text-align: start;
+    border-top: 1px solid #ddd;
+    /* Linha divisória fina da foto */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: rgb(129, 129, 129);
+}
+
+.openFinance img {
+    width: 15px;
+}
+
+/* Opcional: Para adicionar a setinha azul no final da linha do Open Finance */
+.openFinance::after {
+    content: '\f105';
+    /* Código da seta angle-right se usar FontAwesome */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    color: #005a96;
+}

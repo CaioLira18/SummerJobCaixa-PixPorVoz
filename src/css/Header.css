@@ -1,0 +1,42 @@
+.headerlogo img {
+    width: 15px; /* Mantido conforme seu código original */
+    margin: 0 auto;
+}
+
+.headerContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%; /* Garante que o container ocupe a largura toda */
+}
+
+.headerBox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Agora funciona porque tem largura */
+    width: 100%; /* Ocupa toda a largura para empurrar os ícones */
+    margin: 0 auto;
+}
+
+.accountInformations {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+    font-size: 10px; /* Mantido conforme seu código original */
+}
+
+.accountBox {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
+    padding: 20px;
+}
+
+.headerIcons {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaço entre os ícones */
+    padding-right: 20px; /* Compensa o padding do accountBox para ficar simétrico */
+}
