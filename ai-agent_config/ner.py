@@ -3,24 +3,31 @@ from azure.ai.textanalytics import TextAnalyticsClient
 from azure.core.credentials import AzureKeyCredential
 from dotenv import load_dotenv
 
+# Força o carregamento do .env
 load_dotenv()
 
-client = TextAnalyticsClient(
-    endpoint=os.getenv("AZURE_AI_ENDPOINT"),
-    credential=AzureKeyCredential(os.getenv("AZURE_AI_KEY"))
-)
+def obter_cliente():
+    """Cria o cliente apenas quando necessário, garantindo que as chaves existam."""
+    key = os.getenv("AZURE_SPEECH_KEY")
+    endpoint = os.getenv("https://eastus.api.cognitive.microsoft.com/")
+    
+    if not key or not endpoint:
+        # Erro detalhado para você saber o que está faltando
+        raise ValueError(f"Faltando configuração no .env: KEY={'OK' if key else 'ERRO'}, ENDPOINT={'OK' if endpoint else 'ERRO'}")
+    
+    return TextAnalyticsClient(endpoint=endpoint, credential=AzureKeyCredential(key))
 
 def extrair_entidades(texto):
-    # Evita enviar strings vazias ou nulas para a API
     if not texto or not texto.strip():
         return []
 
     try:
+        # Inicializa o cliente aqui dentro
+        client = obter_cliente()
         response = client.recognize_entities([texto])
         entidades = []
 
         for doc in response:
-            # Verifica se o documento retornou erro (ex: texto vazio ou inválido)
             if not doc.is_error:
                 for ent in doc.entities:
                     entidades.append({

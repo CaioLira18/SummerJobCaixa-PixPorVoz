@@ -10,7 +10,17 @@ from agent import agente_pix
 from tts import falar
 from normalizer import normalizar_texto
 
+# 1. Carrega as variáveis do arquivo .env
 load_dotenv()
+
+# 2. Validação rigorosa das chaves de Speech no início do script
+try:
+    SPEECH_KEY = os.environ["AZURE_SPEECH_KEY"]
+    SPEECH_REGION = os.environ["AZURE_REGION"]
+except KeyError as e:
+    # Isso impede que o servidor rode se as chaves estiverem faltando
+    raise RuntimeError(f"Erro crítico: A variável {e} não foi encontrada no .env")
+
 app = FastAPI()
 
 app.add_middleware(
@@ -23,13 +33,8 @@ app.add_middleware(
 @app.get("/ouvir")
 def ouvir_comando():
     try:
-        speech_key = os.getenv("AZURE_SPEECH_KEY")
-        service_region = os.getenv("AZURE_REGION")
-        
-        if not speech_key or not service_region:
-            return {"texto_falado": "", "resposta": "Erro: Chaves não configuradas no .env"}
-
-        speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_region)
+        # Configuração do Speech usando as variáveis validadas acima
+        speech_config = speechsdk.SpeechConfig(subscription=SPEECH_KEY, region=SPEECH_REGION)
         speech_config.speech_recognition_language = "pt-BR" 
         
         audio_config = speechsdk.audio.AudioConfig(use_default_microphone=True)
@@ -42,6 +47,7 @@ def ouvir_comando():
             texto_original = result.text
             texto_limpo = normalizar_texto(texto_original)
             
+            # Aqui ele chama o seu ner.py que já está corrigido
             entidades = extrair_entidades(texto_limpo)
             
             resposta_agente = agente_pix(texto_limpo, entidades)
