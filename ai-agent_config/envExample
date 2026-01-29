@@ -1,7 +1,5 @@
 # Azure Text Analytics
-AZURE_TEXT_KEY=sua_chave_aqui
-AZURE_TEXT_ENDPOINT=seu_endpoint_aqui
 
-# Azure Speech Services
-AZURE_SPEECH_KEY=sua_chave_aqui
-AZURE_SPEECH_REGION=sua_regiao_aqui
+AZURE_AI_ENDPOINT=""
+AZURE_REGION=""
+AZURE_SPEECH_KEY=""
