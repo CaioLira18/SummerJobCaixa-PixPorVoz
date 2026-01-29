@@ -69,9 +69,7 @@ source .venv/bin/activate   # Linux/Mac
 Instale as dependências principais:
 
 ```bash
-pip install azure-cognitiveservices-speech
-pip install azure-ai-textanalytics
-pip install python-dotenv
+pip install requirements.txt
 ```
 
 🔐 Configuração do .env
