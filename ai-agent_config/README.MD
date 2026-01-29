@@ -83,9 +83,9 @@ Crie um arquivo chamado .env na raiz do projeto.
 No Azure Portal → recurso Azure AI Services → Keys and Endpoint
 
 📄 Exemplo de .env
-AZURE_AI_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-AZURE_AI_ENDPOINT=https://ai-pix-por-voz.cognitiveservices.azure.com/
-AZURE_REGION=brazilsouth
+AZURE_SPEECH_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+AZURE_AI_ENDPOINT=https://eastus.api.cognitive.microsoft.com/
+AZURE_REGION=eastus
 
 
 ⚠️ Importante
@@ -102,5 +102,5 @@ Usar brazilsouth (minúsculo, sem espaço)
 Para rodar o fluxo completo:
 
 ```bash
-python main.py
+ uvicorn main:app --reload
 ```
