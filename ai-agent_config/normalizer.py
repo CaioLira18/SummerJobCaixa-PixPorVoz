@@ -8,22 +8,30 @@ def remover_acentos(texto: str) -> str:
     )
 
 SUBSTITUICOES = {
-    # PIX (erros fonéticos comuns)
-    r"\bbits?\b": "pix",
-    r"\bpics?\b": "pix",
-    r"\bpits?\b": "pix",
+    # Erros fonéticos do PIX
+    r"\bbits?\b|\bpics?\b|\bpits?\b": "pix",
 
-    # Ações
-    r"\btransferencia\b": "transferência",
-    r"\benviar dinheiro\b": "transferência",
-    r"\bpagar\b": "transferência",
+    # Conectores
+    r"\bpra\b": "para",
+    r"\bpro\b": "para o",
 
     # Moeda
-    r"\br\$?\s?(\d+)": r"\1 reais",
-    r"\breal\b": "reais",
+    r"\bbrl\b|\breal\b|\breais\b": "reais",
+
+    # Gírias de valor
+    r"\bcontos?\b|\bpila\b": "reais",
+
+    # Verbos
+    r"\benviar dinheiro\b|\bpagar\b|\btransferencia\b": "transferir",
 }
 
-
+STOPWORDS = [
+    "hoje",
+    "agora",
+    "por favor",
+    "porfavor",
+    "rapidinho"
+]
 
 def normalizar_texto(texto: str) -> str:
     texto = texto.lower()
@@ -32,7 +40,8 @@ def normalizar_texto(texto: str) -> str:
     for padrao, substituicao in SUBSTITUICOES.items():
         texto = re.sub(padrao, substituicao, texto)
 
-    
-    texto = re.sub(r"\s+", " ", texto).strip()
+    for stop in STOPWORDS:
+        texto = re.sub(rf"\b{stop}\b", "", texto)
 
+    texto = re.sub(r"\s+", " ", texto).strip()
     return texto

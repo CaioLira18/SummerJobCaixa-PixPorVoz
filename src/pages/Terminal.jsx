@@ -4,14 +4,21 @@ export const Terminal = () => {
   const [falado, setFalado] = useState("");
   const [agente, setAgente] = useState("Aguardando comando...");
 
+  // Terminal.jsx
   const iniciarEscuta = async () => {
     setAgente("Ouvindo...");
     try {
-      const response = await fetch('http://127.0.0.1:8000/ouvir');
-      const data = await response.json();
+      const response = await fetch('http://127.0.0.1:8000/voice', {
+        method: 'POST', // Match the backend change
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: "Quero fazer um pix de 50 reais para o Carlos" }), // Send the actual text here
+      });
 
-      setFalado(data.texto_falado || "...");
-      setAgente(data.resposta);
+      const data = await response.json();
+      // Note: ensure the keys match what brain.py returns (message vs resposta)
+      setAgente(data.message || data.resposta);
     } catch (error) {
       setAgente("Erro ao conectar com o servidor.");
     }

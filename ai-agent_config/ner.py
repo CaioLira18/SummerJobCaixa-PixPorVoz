@@ -9,7 +9,7 @@ load_dotenv()
 def obter_cliente():
     """Cria o cliente apenas quando necessário, garantindo que as chaves existam."""
     key = os.getenv("AZURE_SPEECH_KEY")
-    endpoint = os.getenv("https://eastus.api.cognitive.microsoft.com/")
+    endpoint = os.getenv("AZURE_LANGUAGE_ENDPOINT")
     
     if not key or not endpoint:
         # Erro detalhado para você saber o que está faltando
