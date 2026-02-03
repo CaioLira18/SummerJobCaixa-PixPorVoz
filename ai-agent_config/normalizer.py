@@ -35,5 +35,4 @@ def normalizar_texto(texto: str) -> str:
 
     # Remove múltiplos espaços
     texto = re.sub(r"\s+", " ", texto).strip()
-
     return texto
