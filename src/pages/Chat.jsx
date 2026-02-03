@@ -3,6 +3,7 @@ import React from 'react'
 export const Chat = () => {
 
     const rightPosition = true;
+    const loading = true;
 
     return (
         <div>
@@ -29,6 +30,13 @@ export const Chat = () => {
                                 <i class="fa-solid fa-robot"></i>
                             </div>
                         </div>
+                        {loading && (
+                            <div className="userProfile loading">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
