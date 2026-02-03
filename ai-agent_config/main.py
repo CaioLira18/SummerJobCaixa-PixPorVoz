@@ -1,27 +1,33 @@
-import os
-import azure.cognitiveservices.speech as speechsdk
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 from dotenv import load_dotenv
+import os
 
-# Importação dos seus módulos locais
 from ner import extrair_entidades
 from agent import agente_pix
-from tts import falar
 from normalizer import normalizar_texto
 
-# 1. Carrega as variáveis do arquivo .env
+# ======================
+# BOOTSTRAP
+# ======================
+
 load_dotenv()
 
-# 2. Validação rigorosa das chaves de Speech no início do script
-try:
-    SPEECH_KEY = os.environ["AZURE_SPEECH_KEY"]
-    SPEECH_REGION = os.environ["AZURE_REGION"]
-except KeyError as e:
-    # Isso impede que o servidor rode se as chaves estiverem faltando
-    raise RuntimeError(f"Erro crítico: A variável {e} não foi encontrada no .env")
+# Validação mínima do ambiente (NER)
+TEXT_KEY = os.getenv("AZURE_TEXT_KEY")
+TEXT_ENDPOINT = os.getenv("AZURE_TEXT_ENDPOINT")
 
-app = FastAPI()
+if not TEXT_KEY or not TEXT_ENDPOINT:
+    raise RuntimeError(
+        "Configuração Azure Text Analytics incompleta no .env"
+    )
+
+app = FastAPI(title="Pix por Voz - Backend")
+
+# ======================
+# CORS (MVP)
+# ======================
 
 app.add_middleware(
     CORSMiddleware,
@@ -30,45 +36,69 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/ouvir")
-def ouvir_comando():
-    try:
-        # Configuração do Speech usando as variáveis validadas acima
-        speech_config = speechsdk.SpeechConfig(subscription=SPEECH_KEY, region=SPEECH_REGION)
-        speech_config.speech_recognition_language = "pt-BR" 
-        
-        audio_config = speechsdk.audio.AudioConfig(use_default_microphone=True)
-        recognizer = speechsdk.SpeechRecognizer(speech_config=speech_config, audio_config=audio_config)
-        
-        print("🎙️ Ouvindo comando via API...")
-        result = recognizer.recognize_once()
-        
-        if result.reason == speechsdk.ResultReason.RecognizedSpeech:
-            texto_original = result.text
-            texto_limpo = normalizar_texto(texto_original)
-            
-            # Aqui ele chama o seu ner.py que já está corrigido
-            entidades = extrair_entidades(texto_limpo)
-            
-            resposta_agente = agente_pix(texto_limpo, entidades)
-            
-            falar(resposta_agente) 
+# ======================
+# MODELO DE ENTRADA
+# ======================
 
+class ComandoVoz(BaseModel):
+    texto: str
+
+# ======================
+# ROTA PRINCIPAL
+# ======================
+
+@app.post("/ouvir")
+def ouvir_comando(comando: ComandoVoz):
+    try:
+        texto_original = comando.texto.strip()
+
+        if len(texto_original) < 3:
             return {
-                "texto_falado": texto_original,
-                "resposta": resposta_agente
+                "texto_falado": "",
+                "resposta": "Não consegui entender o comando. Pode repetir?"
             }
-        
-        elif result.reason == speechsdk.ResultReason.NoMatch:
-            return {"texto_falado": "", "resposta": "Não consegui ouvir nada. Tente falar novamente."}
-        else:
-            return {"texto_falado": "", "resposta": "Erro no reconhecimento de voz."}
+
+        # Normalização
+        texto_limpo = normalizar_texto(texto_original)
+
+        # Extração de entidades (NER)
+        entidades = extrair_entidades(texto_limpo)
+
+        # Agente Pix
+        resposta_agente = agente_pix(texto_limpo, entidades)
+
+        return {
+            "texto_falado": texto_original,
+            "texto_normalizado": texto_limpo,
+            "entidades": entidades,   # útil para debug no MVP
+            "resposta": resposta_agente
+        }
 
     except Exception as e:
-        print(f"Erro no servidor: {e}")
-        return {"texto_falado": "Erro", "resposta": str(e)}
+        print("❌ Erro no servidor:", e)
+        return {
+            "texto_falado": "",
+            "resposta": "Ocorreu um erro ao processar seu pedido."
+        }
+
+# ======================
+# HEALTH CHECK
+# ======================
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+# ======================
+# EXECUÇÃO LOCAL
+# ======================
 
 if __name__ == "__main__":
     import uvicorn
-    print("🚀 Servidor Python rodando em http://127.0.0.1:8000")
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    print("🚀 Servidor rodando em http://127.0.0.1:8000")
+    uvicorn.run(
+        "main:app",
+        host="127.0.0.1",
+        port=8000,
+        reload=True
+    )
