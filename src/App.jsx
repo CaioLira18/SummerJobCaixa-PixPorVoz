@@ -4,6 +4,7 @@ import { Home } from './pages/Home'
 import { AppLayout } from './components/AppLayout' 
 import './App.css'
 import { Terminal } from './pages/Terminal'
+import Chat from './pages/Chat'
 function App() {
   const [isVisible, setIsVisible] = useState(false); // Estado centralizado aqui
 
@@ -13,6 +14,7 @@ function App() {
         <Route element={<AppLayout isVisible={isVisible} setIsVisible={setIsVisible} />}>
           <Route path="/" element={<Home isVisible={isVisible} />} />
           <Route path="/terminal" element={<Terminal />} />
+          <Route path="/chat" element={<Chat />} />
         </Route>
       </Routes>
     </div>

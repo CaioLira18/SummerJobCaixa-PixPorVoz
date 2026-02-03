@@ -6,6 +6,8 @@ import './css/Header.css'
 import './css/Home.css'
 import './css/Amount.css'
 import './css/Terminal.css'
+import './css/Chat.css'
+
 
 import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
