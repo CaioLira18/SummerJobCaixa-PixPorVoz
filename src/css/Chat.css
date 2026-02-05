@@ -52,6 +52,18 @@
     border-bottom-right-radius: 10px;
 }
 
+.messageContent {
+    display: flex;
+    flex-direction: column;
+    text-align: start;
+    align-items: start;
+    justify-content: start;
+    font-size: 10px;
+    background-color: bisque;
+    padding: 10px;
+    border-bottom-right-radius: 10px;
+}
+
 /* Loading dots */
 .loading {
     gap: 4px;
@@ -61,7 +73,7 @@
     width: 6px;
     height: 6px;
     background-color: #333;
-    border-radius: 50%;
+    border-radius: 50px;
     display: inline-block;
     animation: bounce 1.4s infinite ease-in-out both;
 }
@@ -83,4 +95,40 @@
         transform: scale(1);
         opacity: 1;
     }
+}
+
+.inputBarBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.microphoneButton {
+    border: 1px solid rgb(255, 255, 255);
+    padding: 10px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.inputBarContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 35vh;  
+}
+
+.inputBarBox input {
+    width: 200px;
+    height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 10px;
+    padding-left: 10px;
 }

@@ -30,6 +30,15 @@ export const Chat = () => {
                                 <i class="fa-solid fa-robot"></i>
                             </div>
                         </div>
+                        <div className="messageBox">
+                            <div className="messageContent">
+                                <div className="messageText">Você confirma essa transação ?</div>
+                                <div className="messageTime">Sim / Não</div>
+                            </div>
+                            <div className="userProfile">
+                                <i class="fa-solid fa-robot"></i>
+                            </div>
+                        </div>
                         {loading && (
                             <div className="userProfile loading">
                                 <span></span>
@@ -39,6 +48,16 @@ export const Chat = () => {
                         )}
                     </div>
                 )}
+            </div>
+
+
+            <div className="inputBarContainer">
+                <div className="inputBarBox">
+                    <input placeholder='Digite Algo' type="text" />
+                    <div className="microphoneButton">
+                        <i class="fa-solid fa-microphone"></i>
+                    </div>
+                </div>
             </div>
         </div>
 
