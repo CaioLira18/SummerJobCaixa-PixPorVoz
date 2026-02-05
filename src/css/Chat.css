@@ -1,70 +1,89 @@
+/* --- CONTAINER PRINCIPAL (CAIXA BRANCA) --- */
 .containerChat {
     display: flex;
-    align-items: center;
-    justify-content: center;
     flex-direction: column;
-    width: 85%;
-    height: 500px auto;
-    padding: 10px;
+    width: 75%; /* Tamanho solicitado */
+    height: 400px; /* Altura fixa para ativar scroll */
+    padding: 20px;
     background-color: #f5f5f5;
     margin: 0 auto;
     border-radius: 10px;
     gap: 20px;
+    overflow-y: auto; /* Ativa scroll vertical */
+    overflow-x: hidden;
 }
 
+/* Customização da Barra de Scroll */
+.containerChat::-webkit-scrollbar {
+    width: 6px;
+}
+
+.containerChat::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.containerChat::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+/* --- ALINHAMENTO DE MENSAGENS --- */
 .containerBox {
     display: flex;
-    align-items: end;
-    justify-content: end;
     flex-direction: column;
+    width: 100%;
     gap: 15px;
-    overflow-y: auto;
 }
+
+.userAlign { align-items: flex-start; }
+.botAlign { align-items: flex-end; }
 
 .messageBox {
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin: 0 auto;
     gap: 10px;
+    width: 100%;
 }
 
+/* --- AVATARES (PERFIL) --- */
 .userProfile {
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: rgb(255, 188, 112);
-    padding: 10px;
-    width: 20px;
-    height: 20px;
-    border-radius: 50px;
+    min-width: 40px;
+    max-width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    flex-shrink: 0; /* Impede deformação */
 }
 
+/* --- BALÕES DE TEXTO --- */
 .messageContent {
     display: flex;
     flex-direction: column;
-    text-align: start;
-    align-items: start;
-    justify-content: start;
-    font-size: 10px;
-    background-color: bisque;
-    padding: 10px;
-    border-bottom-right-radius: 10px;
+    text-align: center;
+    font-size: 13px;
+    background-color: #ffe4c4;
+    padding: 12px 20px;
+    border-radius: 15px;
+    max-width: 70%;
+    word-wrap: break-word;
 }
 
-.messageContent {
+.messageTime {
+    font-size: 11px;
+    margin-top: 5px;
+    color: #555;
+}
+
+/* --- LOADING --- */
+.loadingWrapper {
     display: flex;
-    flex-direction: column;
-    text-align: start;
-    align-items: start;
-    justify-content: start;
-    font-size: 10px;
-    background-color: bisque;
-    padding: 10px;
-    border-bottom-right-radius: 10px;
+    justify-content: flex-end;
+    width: 100%;
 }
 
-/* Loading dots */
 .loading {
     gap: 4px;
 }
@@ -73,62 +92,73 @@
     width: 6px;
     height: 6px;
     background-color: #333;
-    border-radius: 50px;
+    border-radius: 50%;
     display: inline-block;
     animation: bounce 1.4s infinite ease-in-out both;
 }
 
-.loading span:nth-child(1) {
-    animation-delay: -0.32s;
-}
-
-.loading span:nth-child(2) {
-    animation-delay: -0.16s;
-}
+.loading span:nth-child(1) { animation-delay: -0.32s; }
+.loading span:nth-child(2) { animation-delay: -0.16s; }
 
 @keyframes bounce {
-    0%, 80%, 100% {
-        transform: scale(0);
-        opacity: 0.3;
-    }
-    40% {
-        transform: scale(1);
-        opacity: 1;
-    }
+    0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+    40% { transform: scale(1); opacity: 1; }
 }
 
-.inputBarBox {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-}
-
-.microphoneButton {
-    border: 1px solid rgb(255, 255, 255);
-    padding: 10px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-}
-
+/* --- ÁREA DE INPUT (CORRIGIDA) --- */
 .inputBarContainer {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    margin-top: 35vh;  
+    margin: 30px auto;
+    width: 90%; /* Mesma largura do chat para não passar */
+}
+
+.inputBarBox {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 30px;
+    padding: 5px 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    flex: 1; /* Ocupa o espaço disponível sem empurrar o botão */
+    min-width: 0; 
 }
 
 .inputBarBox input {
-    width: 200px;
-    height: 30px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
+    width: 100%;
+    height: 20px;
+    border: none;
+    outline: none;
     font-size: 10px;
-    padding-left: 10px;
+    background: transparent;
+}
+
+.microphoneButton {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgb(0, 0, 0);
+    border: 1px solid rgb(0, 0, 0);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    flex-shrink: 0; /* Impede que o botão diminua */
+}
+
+.waveformIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+    padding: 10px;
+    border-radius: 50%;
+    width: 5px;
+    height: 5px;
+}
+
+.waveformIcon img {
+    width: 18px;
 }
