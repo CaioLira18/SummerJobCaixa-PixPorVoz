@@ -61,9 +61,9 @@ Microfone funcional
 
 Recomenda-se o uso de ambiente virtual.
 
-python -m venv .venv
+python -m venv venv
 source .venv/bin/activate   # Linux/Mac
-.venv\Scripts\activate      # Windows
+venv\Scripts\activate      # Windows
 
 
 Instale as dependências principais:
