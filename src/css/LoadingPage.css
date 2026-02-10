@@ -1,0 +1,54 @@
+.loading-screen-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #005ca9 0%, #003366 100%); /* Azul Caixa */
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .loading-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .pix-spinner {
+    width: 70px;
+    height: 70px;
+    border: 6px solid rgba(255, 255, 255, 0.1);
+    border-left-color: #f39200; /* Laranja da logo */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 30px;
+  }
+  
+  .loading-text-group h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  
+  .loading-text-group p {
+    font-size: 1rem;
+    opacity: 0.8;
+    max-width: 250px;
+  }
+  
+  .loading-footer {
+    padding-bottom: 30px;
+    font-size: 0.8rem;
+    opacity: 0.5;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
