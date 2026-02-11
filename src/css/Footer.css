@@ -1,0 +1,22 @@
+.bottomNav {
+    padding: 10px;
+    background-color: #0d5cab;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 35px;
+    color: white;
+}
+
+.bottomNavItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.bottomNavItem i {
+    font-size: 18px;
+    margin-bottom: 4px;
+}
