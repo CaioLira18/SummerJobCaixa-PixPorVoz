@@ -6,6 +6,7 @@ import { LoadingPage } from './components/LoadingPage'
 import './App.css'
 import { Terminal } from './pages/Terminal'
 import Chat from './pages/Chat'
+import { Footer } from './components/Footer'
 function App() {
   const [isVisible, setIsVisible] = useState(false); // Estado centralizado aqui
 
