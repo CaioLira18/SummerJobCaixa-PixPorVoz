@@ -1,0 +1,8 @@
+pip install azure-cognitiveservices-speech
+pip install azure-ai-textanalytics
+pip install python-dotenv
+pip install azure.cognitiveservices.speech
+pip install fastapi
+pip install uvicorn
+pip install openia
+pip install huggingface_hub

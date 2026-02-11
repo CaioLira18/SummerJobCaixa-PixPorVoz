@@ -5,7 +5,9 @@ import './css/AppLayout.css'
 import './css/Header.css'
 import './css/Home.css'
 import './css/Amount.css'
-
+import './css/Terminal.css'
+import './css/Chat.css'
+import './css/LoadingPage.css'
 
 
 

@@ -1,0 +1,48 @@
+/* Container principal do Terminal */
+.terminal-container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    width: 90%;
+    max-width: 500px;
+    color: #000;
+}
+
+/* Cabeçalho do terminal (bolinhas de controle) */
+.terminal-header {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+.terminal-line {
+    margin: 10px 0;
+    line-height: 1.4;
+}
+
+.prompt { color: #000000; margin-right: 10px; } /* Verde terminal */
+.user-text { color: #000000; }
+.agent-text { color: #000000; } /* Azul ciano para o agente */
+
+/* Botão estilizado */
+.btn-falar {
+    background: #88baff;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+
+.btn-falar:hover {
+    transform: scale(1.05);
+}

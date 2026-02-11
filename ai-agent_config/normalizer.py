@@ -1,38 +1,38 @@
 import re
 import unicodedata
 
-def remover_acentos(texto: str) -> str:
-    return ''.join(
-        c for c in unicodedata.normalize('NFD', texto)
-        if unicodedata.category(c) != 'Mn'
-    )
-
-SUBSTITUICOES = {
-    # PIX (erros fonéticos comuns)
-    r"\bbits?\b": "pix",
-    r"\bpics?\b": "pix",
-    r"\bpits?\b": "pix",
-
-    # Ações
-    r"\btransferencia\b": "transferência",
-    r"\benviar dinheiro\b": "transferência",
-    r"\bpagar\b": "transferência",
-
-    # Moeda
-    r"\br\$?\s?(\d+)": r"\1 reais",
-    r"\breal\b": "reais",
-}
-
-
-
+# Normalização base
 def normalizar_texto(texto: str) -> str:
-    texto = texto.lower()
-    texto = remover_acentos(texto)
+    if not texto:
+        return ""
 
-    for padrao, substituicao in SUBSTITUICOES.items():
-        texto = re.sub(padrao, substituicao, texto)
+    texto = texto.lower().strip()
 
-    
+    # Remove acentos
+    texto = unicodedata.normalize("NFKD", texto)
+    texto = "".join(c for c in texto if not unicodedata.combining(c))
+
+    # Normalizações comuns de fala
+    substituicoes = {
+        "pra ": "para ",
+        "pro ": "para o ",
+        "pixx": "pix",
+        "pique": "pix",
+        "reai": "reais",
+        "reais reais": "reais",
+        "mandar": "enviar",
+        "transferencia": "transferir",
+        "manda": "enviar",
+        "pagar": "enviar",
+        "dinheiro": "",
+    }
+
+    for errado, certo in substituicoes.items():
+        texto = texto.replace(errado, certo)
+
+    # Remove ruído comum
+    texto = re.sub(r"\b(eh|ah|hum|hmm|tipo|entao)\b", "", texto)
+
+    # Remove múltiplos espaços
     texto = re.sub(r"\s+", " ", texto).strip()
-
     return texto

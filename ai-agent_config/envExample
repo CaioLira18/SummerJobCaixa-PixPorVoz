@@ -1,0 +1,5 @@
+# Azure Text Analytics
+
+AZURE_AI_ENDPOINT=""
+AZURE_REGION=""
+AZURE_SPEECH_KEY=""
