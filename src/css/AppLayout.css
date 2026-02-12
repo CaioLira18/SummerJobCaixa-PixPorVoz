@@ -1,6 +1,6 @@
 .app-layout {
     display: flex;
-    width: 300px;
+    width: 400px;
     height: 600px;
     background: #22627d;
     background: linear-gradient(90deg, rgba(34, 98, 125, 1) 0%, rgba(79, 152, 176, 1) 100%);

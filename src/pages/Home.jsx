@@ -26,7 +26,7 @@ export const Home = ({ isVisible }) => {
 
         <div className="homeServicosHeader">
           <span>Serviços</span>
-          <a href="#">Mostrar todos &rarr;</a>
+          <span className='showAll'>Mostrar Todos</span>
         </div>
 
         <div className="homeServicosGrid">
