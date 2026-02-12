@@ -195,6 +195,18 @@
   cursor: pointer;
   transition: all 0.2s;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative; 
+}
+
+.pix-option-card .novoCard {
+  background-color: orange;
+  color: white;
+  border-radius: 10px;
+  padding: 4px 8px;
+  font-size: 10px;
+  position: absolute;
+  top: 0px;     /* distância da borda superior */
+  right: 0px;   /* distância da borda direita */
 }
 
 .pix-option-card:hover {
