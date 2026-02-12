@@ -1,134 +1,183 @@
-/* Container principal com scroll e respiro para o footer */
 .homeContainer {
-    background-color: #f4f6f8;
-    padding-top: 15px;
-    padding-bottom: 50px; 
-}
-
-.homeBox {
+    background-color: #f0f4f7;
+    flex: 1;
+    padding-bottom: 64px;
+    font-family: 'DM Sans', sans-serif;
     width: 100%;
-    margin: 0 auto;
+    box-sizing: border-box;
 }
 
-/* ================= SALDO ================= */
+/* Card de Saldo sobreposto */
 .homeAmountContainer {
-    margin-top: 45px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    margin: -40px 16px 0 16px;
+    position: relative;
+    z-index: 10;
+    background-color: white;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
 }
 
-/* ================= OPÇÕES RÁPIDAS (Pagar, Pix, etc) ================= */
+/* Opções Rápidas (Cards Brancos) */
 .homeOptionsContainer {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
-    margin-top: 15px;
-    gap: 10px;
-    padding: 20px;
+    padding: 16px;
+    gap: 8px;
+    flex-wrap: nowrap;
+    box-sizing: border-box;
 }
 
 .homeOptionsBox {
     flex: 1;
-    height: 75px; 
-    background-color: #ffffff;
-    border-radius: 12px;
+    min-width: 0;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px 12px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
-    font-size: 11px;
-    font-weight: 500;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-    text-align: center;
-    color: #333;
-    cursor: pointer;
-    transition: 0.2s ease;
-}
-
-.homeOptionsBox a {
-    color: #333;
-}
-
-.homeOptionsBox:hover {
-    transform: translateY(-2px);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    border: none;
+    text-decoration: none;
+    box-sizing: border-box;
 }
 
 .homeOptionsBox i {
-    font-size: 18px;
-    color: #0d5cab;
-    margin-bottom: 6px;
-    padding: 6px;
-    border-radius: 8px;
+    font-size: 20px;
+    color: #00599A;
+    margin-bottom: 8px;
 }
 
-/* ================= SEÇÃO DE SERVIÇOS ================= */
+.homeOptionsBox span {
+    font-size: 11px;
+    font-weight: bold;
+    color: #333;
+    line-height: 1.2;
+    text-align: center;
+    word-wrap: break-word;
+}
+
+/* Grid de Serviços */
 .homeServicosHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 16px 16px 8px 16px;
+    box-sizing: border-box;
 }
 
 .homeServicosHeader span {
-    font-weight: 600;
-    font-size: 12px;
-    color: #333;
-    margin-top: 15px;
+    font-weight: bold;
+    color: #00599A;
+    font-size: 16px;
 }
 
 .homeServicosHeader .showAll {
-    color: #0d5cab;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .homeServicosGrid {
     display: grid;
-    align-items: center;
-    justify-content: center;
-    grid-template-columns: 1fr 1fr;
-    gap: 22px;
-    margin: 0 auto;
-    width: 100px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    padding: 0 16px;
+    box-sizing: border-box;
 }
 
 .homeServicoCard {
-    background-color: #ffffff;
-    border-radius: 15px;
-    padding: 12px;
-    width: 150px;
-    height: 55px;
+    background-color: white;
+    padding: 16px;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: start;
-    justify-content: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-    cursor: pointer;
-    transition: 0.2s ease;
-    margin-top: 20px;
+    justify-content: start;
+    min-height: 80px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    text-align: left;
+    box-sizing: border-box;
 }
 
-.homeServicoCard:hover {
-    transform: translateY(-2px);
-}
-
-/* Círculo do ícone reduzido conforme o novo print */
 .iconCircle {
-    background-color: #f0f7ff;
-    width: 38px;
-    height: 38px;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+    border-radius: 50%;
+    background-color: #EBF5FB;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
+    margin-bottom: 8px;
 }
 
 .homeServicoCard i {
-    font-size: 18px;
-    color: #0d5cab;
+    font-size: 14px;
+    color: #00599A;
 }
 
 .homeServicoCard span {
-    font-size: 13px;
-    font-weight: 500;
-    color: #444;
+    font-size: 12px;
+    color: #4a5568;
+    line-height: 1.2;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Responsividade para telas pequenas */
+@media (max-width: 360px) {
+    .homeAmountContainer {
+        margin: -40px 12px 0 12px;
+        padding: 12px;
+    }
+    
+    .homeOptionsContainer {
+        padding: 12px;
+        gap: 6px;
+    }
+    
+    .homeOptionsBox {
+        padding: 16px 8px;
+    }
+    
+    .homeOptionsBox i {
+        font-size: 18px;
+    }
+    
+    .homeOptionsBox span {
+        font-size: 10px;
+    }
+    
+    .homeServicosHeader {
+        padding: 12px 12px 6px 12px;
+    }
+    
+    .homeServicosGrid {
+        padding: 0 12px;
+        gap: 6px;
+    }
+    
+    .homeServicoCard {
+        padding: 12px;
+        min-height: 70px;
+    }
+    
+    .homeServicoCard span {
+        font-size: 11px;
+    }
+}
+
+/* Responsividade para telas muito pequenas */
+@media (max-width: 320px) {
+    .homeOptionsBox span {
+        font-size: 9px;
+    }
+    
+    .homeServicoCard span {
+        font-size: 10px;
+    }
 }

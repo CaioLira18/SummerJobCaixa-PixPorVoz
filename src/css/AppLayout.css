@@ -1,8 +1,16 @@
 .app-layout {
     display: flex;
-    width: 400px;
-    height: 600px;
-    background: #22627d;
-    background: linear-gradient(90deg, rgba(34, 98, 125, 1) 0%, rgba(79, 152, 176, 1) 100%);
     flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    max-width: 100vw;
+    background-color: #f0f4f7;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+* {
+    box-sizing: border-box;
 }
