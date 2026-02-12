@@ -9,15 +9,17 @@ export const Amount = (
                 <div className="amountBox">
                     <div className="amount">
                         <span>Saldo Atual</span>
-                        <h4>R$ {!isVisible ? 100 : '****'}</h4>
-                    </div>
-                    <div className="iconAngle">
-                        <i class="fa-solid fa-angle-right"></i>
+                        <h4>R$ {!isVisible ? '100,00' : '****'}</h4>
                     </div>
                 </div>
                 <div className="openFinance">
-                    <img src="https://res.cloudinary.com/dthgw4q5d/image/upload/v1768933937/simbolo-monocromatico-azulcaixa_nr88za.png" alt="" />
-                    <span>Conecte outras contas via Open Finance</span>
+                    <div className="homeIcon">
+                        <i class="fa-solid fa-building-columns"></i>
+                    </div>
+                    <span>0,00 em outros bancos</span>
+                    <div className="angle">
+                        <i class="fa-solid fa-angle-right"></i>
+                    </div>
                 </div>
             </div>
         </div>

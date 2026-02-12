@@ -55,6 +55,10 @@ export const Home = ({ isVisible }) => {
             <div className="iconCircle"><i className="fa-solid fa-dollar-sign"></i></div>
             <span>Empréstimos</span>
           </div>
+          <div className="homeServicoCard">
+            <div className="iconCircle"><i className="fa-solid fa-dollar-sign"></i></div>
+            <span>Trazer meus dados de outro banco</span>
+          </div>
         </div>
       </div>
     </div>
