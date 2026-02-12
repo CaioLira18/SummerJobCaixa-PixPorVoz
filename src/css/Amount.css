@@ -1,5 +1,9 @@
 .amountContainer {
+<<<<<<< HEAD
+    width: 100% auto;
+=======
     width: 80%;
+>>>>>>> main
     /* Mantido */
     margin: -30px auto 0; /* Margem negativa no topo para subir, centralizado horizontalmente */    /* Mantido */
     border: none;
@@ -11,6 +15,10 @@
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
     /* Sombra leve para profundidade */
     position: relative;
+<<<<<<< HEAD
+    padding: 10px;
+=======
+>>>>>>> main
 }
 
 .amount {

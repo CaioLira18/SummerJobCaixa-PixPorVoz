@@ -8,9 +8,8 @@ import './css/Amount.css'
 import './css/Terminal.css'
 import './css/Chat.css'
 import './css/LoadingPage.css'
-
-
-
+import './css/Footer.css'
+import './css/TransacaoPage.css'
 import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
 

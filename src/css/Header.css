@@ -7,6 +7,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+<<<<<<< HEAD
+    background-color: #0d5cab;
+=======
+>>>>>>> main
     width: 100%; /* Garante que o container ocupe a largura toda */
 }
 
