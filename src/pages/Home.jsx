@@ -1,5 +1,6 @@
 import React from 'react'
 import { Amount } from '../components/Amount'
+import { Link } from 'react-router-dom'
 
 export const Home = ({ isVisible }) => {
   return (
@@ -18,11 +19,15 @@ export const Home = ({ isVisible }) => {
             <i className="fa-solid fa-barcode"></i>
             <span>Pagar conta</span>
           </div>
-          <div className="homeOptionsBox">
-            <i class="fa-brands fa-pix"></i>
+
+          <Link to="/areaPix" className="homeOptionsBox">
+            <i className="fa-brands fa-pix"></i>
             <span>Fazer Pix</span>
-          </div>
+          </Link>
+
+
         </div>
+
 
         <div className="homeServicosHeader">
           <span>Serviços</span>

@@ -5,7 +5,7 @@ export const Footer = () => {
     <nav className="bottomNav">
       <div className="bottomNavItem active">
         <i className="fa-solid fa-house"></i>
-        <span>Início</span>
+        <a href="/"><span>Início</span></a>
       </div>
       <div className="bottomNavItem">
         <i className="fa-solid fa-file-lines"></i>

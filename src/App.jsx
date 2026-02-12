@@ -19,7 +19,7 @@ function App() {
           <Route path="/terminal" element={<Terminal />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/loading" element={<LoadingPage />} />
-          <Route path="/transacaoPagina" element={<TransaçãoPagina />} />
+          <Route path="/areaPix" element={<TransaçãoPagina />} />
         </Route>
       </Routes>
     </div>
