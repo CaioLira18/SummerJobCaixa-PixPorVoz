@@ -57,3 +57,21 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.message {
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.message.success {
+  background: rgba(46, 213, 115, 0.2);
+  color: #2ed573;
+}
+
+.message.error {
+  background: rgba(255, 71, 87, 0.2);
+  color: #ff4757;
+}

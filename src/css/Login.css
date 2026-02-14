@@ -107,6 +107,7 @@
   cursor: pointer;
   margin-bottom: 20px;
   transition: 0.2s;
+  margin-top: 20px;
 }
 
 .login-button:hover {

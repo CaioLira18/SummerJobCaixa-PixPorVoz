@@ -1,8 +1,57 @@
+import axios from "axios";
 import React, { useState } from "react";
 
 const LoginPage = () => {
+  const API_URL = "http://localhost:8080/api"
   const [biometria, setBiometria] = useState(true);
   const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleClickLogin = async () => {
+    setLoading(true);
+    setError("");
+    setSuccess("");
+
+    console.log("Iniciando tentativa de login para:", email); // DEBUG
+
+    try {
+      // Importante: verifique se 'axios' está importado no topo do arquivo
+      const response = await axios.post(
+        `${API_URL}/auth/login`,
+        { email, password },
+      );
+
+      console.log("Resposta do servidor:", response.data); // DEBUG
+
+      if (response.data) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+        setSuccess("Login realizado com sucesso!");
+        // setIsAuthenticated(true); // Garanta que esta função exista no seu contexto
+      }
+    } catch (error) {
+      // LOG DETALHADO NO CONSOLE
+      console.error("ERRO COMPLETO:", error);
+
+      if (error.response) {
+        // O servidor respondeu com um status fora de 2xx
+        console.error("Dados do erro:", error.response.data);
+        console.error("Status do erro:", error.response.status);
+        setError(error.response.data || "Credenciais inválidas");
+      } else if (error.request) {
+        // A requisição foi feita mas não houve resposta (CORS ou Servidor Offline)
+        console.error("Nenhuma resposta recebida. Verifique o CORS e se o backend está rodando na porta 8080.");
+        setError("Erro de conexão: O servidor não respondeu.");
+      } else {
+        setError("Erro na configuração da requisição.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const background =
     "https://res.cloudinary.com/dthgw4q5d/image/upload/v1771106356/mulher_nvzqry.png";
@@ -33,7 +82,7 @@ const LoginPage = () => {
         {/* INPUT USUÁRIO */}
         <div className="input-group">
           <label>CPF ou Email</label>
-          <input type="text" placeholder="Digite seu CPF ou email" />
+          <input value={email} onChange={(e) => setEmail(e.target.value)} type="text" placeholder="Digite seu CPF ou email" />
         </div>
 
         {/* INPUT SENHA */}
@@ -43,6 +92,8 @@ const LoginPage = () => {
             <input
               type={mostrarSenha ? "text" : "password"}
               placeholder="Digite sua senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <span
               className="toggle-password"
@@ -53,9 +104,12 @@ const LoginPage = () => {
           </div>
         </div>
 
+        {error && <p className="message error">{error}</p>}
+        {success && <p className="message success">{success}</p>}
+
         {/* BOTÃO ENTRAR */}
-        <button className="login-button">
-          Entrar
+        <button className="login-button" onClick={handleClickLogin} disabled={loading}>
+          {loading ? "Carregando..." : "LOGIN"}
         </button>
 
         {/* Biometria */}
