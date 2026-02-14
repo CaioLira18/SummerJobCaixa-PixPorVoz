@@ -1,0 +1,138 @@
+.welcome-container {
+  width: 500px;      /* Limita o tamanho em telas grandes */
+  margin: 0 auto;        /* CENTRALIZA o container na página */
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 24px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  font-family: "Segoe UI", sans-serif;
+  color: white;
+  overflow: hidden;
+  box-sizing: border-box; /* Garante que o padding não quebre a largura */
+}
+
+/* Overlay escuro para legibilidade */
+.welcome-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(11, 45, 107, 0.95) 0%,
+    rgba(7, 29, 70, 0.85) 50%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  z-index: 0;
+}
+
+/* Conteúdo acima do overlay */
+.content {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Logo */
+.logo {
+  margin-bottom: 40px;
+}
+
+.logo img {
+  width: 180px;
+}
+
+/* Texto */
+.welcome-text {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 40px;
+}
+
+/* Botões principais */
+.buttons {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.card-button {
+  width: 150px;
+  padding: 24px;
+  border-radius: 16px;
+  border: none;
+  background: #eaeaea;
+  color: #0b2d6b;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.card-button:hover {
+  transform: translateY(-2px);
+}
+
+/* Botão outline */
+.outline-button {
+  width: 100%;
+  padding: 18px;
+  border-radius: 16px;
+  border: 2px solid white;
+  background: transparent;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+/* Link */
+.link-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  margin-bottom: 30px;
+}
+
+.link-button:hover {
+  text-decoration: underline;
+}
+
+/* Versão */
+.version {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+/* Ajuste nos botões laterais para mobile */
+@media (max-width: 400px) {
+  .card-button {
+    width: 100%; /* Ocupam a largura total em telas muito pequenas */
+    padding: 20px 10px;
+    font-size: 14px;
+  }
+  
+  .buttons {
+    flex-direction: row; /* Mantém lado a lado, ou mude para column se preferir empilhado */
+    gap: 10px;
+  }
+
+  .logo img {
+    width: 140px;
+  }
+
+  .welcome-text {
+    font-size: 18px;
+  }
+}

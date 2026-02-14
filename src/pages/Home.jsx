@@ -1,8 +1,36 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Amount } from '../components/Amount'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export const Home = ({ isVisible }) => {
+  // 1. Move State inside the component
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [name, setName] = useState('');
+  
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setIsAuthenticated(true);
+        setIsAdmin(parsedUser.role === 'ADMIN');
+        setName(parsedUser.name || '');
+      } catch (err) {
+        console.error("Erro ao processar usuário do localStorage", err);
+      }
+    }
+  }, []);
+
+  // 2. Move navigation logic into a useEffect or handle it conditionally
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/welcome');
+    }
+  }, [isAuthenticated, navigate]);
+
   return (
     <div className="homeContainer">
       <div className="homeBox">
@@ -24,10 +52,7 @@ export const Home = ({ isVisible }) => {
             <i className="fa-brands fa-pix"></i>
             <span>Fazer Pix</span>
           </Link>
-
-
         </div>
-
 
         <div className="homeServicosHeader">
           <span>Serviços</span>
@@ -65,4 +90,4 @@ export const Home = ({ isVisible }) => {
   )
 }
 
-export default Home
+export default Home;

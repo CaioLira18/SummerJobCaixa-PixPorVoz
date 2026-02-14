@@ -1,0 +1,187 @@
+.login-container {
+  width: 500px;           /* Ocupa tudo em telas pequenas */
+  margin: 0 auto;        /* CENTRALIZA o container na página */
+  height: 100vh;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: "Segoe UI", sans-serif;
+  overflow: hidden;
+}
+
+/* Overlay */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(11, 45, 107, 0.95) 0%,
+    rgba(7, 29, 70, 0.85) 50%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  z-index: 0;
+}
+
+.top-content {
+  position: relative;
+  z-index: 1;
+  padding: 40px 24px;
+}
+
+.logo {
+  width: 80px;
+}
+
+/* Card */
+.login-card {
+  position: relative;
+  z-index: 1;
+  background: #f2f2f2;
+  border-radius: 24px 24px 0 0;
+  padding: 30px 24px;
+  color: #003366;
+}
+
+.card-title {
+  text-align: center;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
+
+/* Inputs */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  font-size: 14px;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.input-group input {
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #989898;
+  font-size: 15px;
+  outline: none;
+  background-color: transparent;
+  color: black;
+}
+
+.input-group input:focus {
+  border-color: #0b5fa5;
+}
+
+/* Senha */
+.password-wrapper {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: #0b5fa5;
+  cursor: pointer;
+}
+
+/* Botão Entrar */
+.login-button {
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  border: none;
+  background: #0b5fa5;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: 0.2s;
+}
+
+.login-button:hover {
+  background: #084a82;
+}
+
+/* Biometria */
+.biometria {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+/* Toggle */
+.toggle {
+  width: 50px;
+  height: 26px;
+  background: #ccc;
+  border-radius: 20px;
+  position: relative;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.toggle.active {
+  background: #0b5fa5;
+}
+
+.circle {
+  width: 22px;
+  height: 22px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: 0.3s;
+}
+
+.toggle.active .circle {
+  left: 26px;
+}
+
+/* Link */
+.link-button {
+  background: none;
+  border: none;
+  color: #0b5fa5;
+  font-size: 14px;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+}
+
+@media (max-width: 480px) {
+  .top-content {
+    padding: 30px 20px;
+  }
+  
+  .logo {
+    width: 65px;
+  }
+
+  .login-card {
+    padding: 24px 20px;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .card-title {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
+
+  .input-group input {
+    padding: 12px;
+  }
+}

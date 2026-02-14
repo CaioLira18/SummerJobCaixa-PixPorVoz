@@ -1,9 +1,10 @@
 .headerContainer {
     background: linear-gradient(to bottom, #00599A, #00B5E2);
-    padding: 40px 16px 56px 16px;
+    padding:  16px 56px 16px;
     color: white;
     width: 100%;
     box-sizing: border-box;
+    margin-top: 130px;
 }
 
 .headerlogo img {

@@ -11,6 +11,8 @@ import './css/LoadingPage.css'
 import './css/Footer.css'
 import './css/TransacaoPage.css'
 import './css/PixConfigurationPage.css'
+import './css/Welcome.css'
+import './css/Login.css'
 import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
 
