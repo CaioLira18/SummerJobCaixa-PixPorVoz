@@ -8,8 +8,9 @@ import Chat from './pages/Chat'
 import { Footer } from './components/Footer'
 import { TransaçãoPagina } from './pages/TransaçãoPagina'
 import PixConfigurationLoading from './pages/PixConfigurationLoading'
+import AuthPage from './pages/AuthPage'
 function App() {
-  const [isVisible, setIsVisible] = useState(false); // Estado centralizado aqui
+  const [isVisible, setIsVisible] = useState(false);
 
   return (
     <div>
@@ -22,6 +23,7 @@ function App() {
           <Route path="/areaPix" element={<TransaçãoPagina />} />
         </Route>
         <Route path="/loadingConfigurationPage" element={<PixConfigurationLoading />} />
+        <Route path="/login" element={<AuthPage />} />
       </Routes>
     </div>
   )

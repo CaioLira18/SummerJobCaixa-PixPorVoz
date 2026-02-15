@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export const Header = ({isVisible, setIsVisible}) => {
+
+    const navigate = useNavigate();
 
     function openVisible() {
         setVisible(true)
@@ -8,6 +11,11 @@ export const Header = ({isVisible, setIsVisible}) => {
 
     function closeVisible() {
         setVisible(false)
+    }
+
+    function logout() {
+        localStorage.removeItem('user');
+        navigate('/login')
     }
 
     return (
@@ -30,6 +38,7 @@ export const Header = ({isVisible, setIsVisible}) => {
                             onClick={() => setIsVisible(!isVisible)}
                             style={{ cursor: 'pointer' }}
                         ></i>
+                        <i onClick={logout} class="fa-solid fa-arrow-right-from-bracket"></i>
                     </div>
                 </div>
             </div>

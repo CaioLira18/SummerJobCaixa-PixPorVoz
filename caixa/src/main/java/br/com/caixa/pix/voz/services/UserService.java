@@ -32,7 +32,8 @@ public class UserService {
         User user = new User();
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
-        user.setSaldo(dto.getSaldo());
+        user.setCpf(dto.getCpf());
+        user.setSaldo(1000);
 
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
         user.setPassword(encodedPassword);
