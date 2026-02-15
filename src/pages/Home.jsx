@@ -16,7 +16,6 @@ export const Home = ({ isVisible }) => {
       try {
         const parsedUser = JSON.parse(storedUser);
         setIsAuthenticated(true);
-        setIsAdmin(parsedUser.role === 'ADMIN');
         setName(parsedUser.name || '');
       } catch (err) {
         console.error("Erro ao processar usuário do localStorage", err);
@@ -24,12 +23,6 @@ export const Home = ({ isVisible }) => {
     }
   }, []);
 
-  // 2. Move navigation logic into a useEffect or handle it conditionally
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/welcome');
-    }
-  }, [isAuthenticated, navigate]);
 
   return (
     <div className="homeContainer">

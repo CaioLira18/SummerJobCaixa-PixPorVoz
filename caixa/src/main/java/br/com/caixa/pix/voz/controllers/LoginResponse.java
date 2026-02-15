@@ -14,5 +14,6 @@ public class LoginResponse {
     private String email;
     private String name;
     private String cpf;
+    private Integer saldo;
 
 }

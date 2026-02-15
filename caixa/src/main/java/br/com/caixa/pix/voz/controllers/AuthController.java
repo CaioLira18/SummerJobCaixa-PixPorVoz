@@ -51,7 +51,7 @@ public class AuthController {
             }
 
             return ResponseEntity.ok(new LoginResponse(
-                    user.getId(), user.getEmail(), user.getName(), user.getCpf()
+                    user.getId(), user.getEmail(), user.getName(), user.getCpf(), user.getSaldo()
             ));
 
         } catch (Exception e) {

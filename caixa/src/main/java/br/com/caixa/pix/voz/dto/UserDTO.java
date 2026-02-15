@@ -1,6 +1,7 @@
 package br.com.caixa.pix.voz.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,5 +18,6 @@ public class UserDTO {
     private String name;
     private String email;
     private String password;
-    private String saldo;
+    private String cpf;
+    private Integer saldo;
 }

@@ -10,5 +10,7 @@ public class CreateUserDTO {
     private String name;
     private String password;
     private String email;
-    private String saldo;
+    private String cpf;
+    private Integer saldo;
+
 }

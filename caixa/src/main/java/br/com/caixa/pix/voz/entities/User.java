@@ -22,5 +22,5 @@ public class User {
     private String email;
     private String password;
     private String cpf;
-    private String saldo;
+    private Integer saldo = 1000;
 }
