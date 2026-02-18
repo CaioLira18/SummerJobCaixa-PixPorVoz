@@ -14,6 +14,10 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Setter
+/**
+ * A classe UserDTO é um DTO (Data Transfer Object) que representa os dados de um usuário, 
+ * incluindo id, nome, email, senha, CPF, saldo e uma lista de IDs de contatos.
+ */
 public class UserDTO {
     private String id;
     private String name;

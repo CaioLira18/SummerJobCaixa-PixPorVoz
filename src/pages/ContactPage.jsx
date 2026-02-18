@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export const ContactPage = () => {
@@ -6,23 +6,41 @@ export const ContactPage = () => {
   const [foundUser, setFoundUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [contactObjects, setContactObjects] = useState([]); // Armazena os usuários completos
   const navigate = useNavigate();
 
-  // Função para buscar usuário pelo CPF
+  // 1. Carrega os dados detalhados dos contatos ao iniciar
+  useEffect(() => {
+    const loadContacts = async () => {
+      const storedUser = JSON.parse(localStorage.getItem('user'));
+      if (storedUser && storedUser.contactIds && storedUser.contactIds.length > 0) {
+        try {
+          // Fazemos um Promise.all para buscar os dados de cada ID na lista
+          const details = await Promise.all(
+            storedUser.contactIds.map(id =>
+              fetch(`http://localhost:8080/api/users/${id}`).then(res => res.json())
+            )
+          );
+          setContactObjects(details);
+        } catch (error) {
+          console.error("Erro ao carregar detalhes dos contatos", error);
+        }
+      }
+    };
+    loadContacts();
+  }, []);
+
   const handleSearch = async () => {
     if (!cpf) {
       setMessage('Por favor, digite um CPF.');
       return;
     }
-
     setLoading(true);
     setMessage('');
     setFoundUser(null);
 
     try {
-      // endpoint que deve ser implementado no backend
       const response = await fetch(`http://localhost:8080/api/users/search/${cpf}`);
-
       if (response.ok) {
         const data = await response.json();
         setFoundUser(data);
@@ -36,22 +54,17 @@ export const ContactPage = () => {
     }
   };
 
-  // Função para adicionar o ID do contato à lista do usuário logado
   const handleAddContact = async () => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
-
-    // Evitar duplicados no front-end
     const currentContactIds = storedUser.contactIds || [];
+
     if (currentContactIds.includes(foundUser.id)) {
       alert("Este contato já está na sua lista.");
       return;
     }
 
-    // Criar o payload para o PUT (UserDTO corrigido)
-    const updatedData = {
-      ...storedUser,
-      contactIds: [...currentContactIds, foundUser.id]
-    };
+    const updatedContactIds = [...currentContactIds, foundUser.id];
+    const updatedData = { ...storedUser, contactIds: updatedContactIds };
 
     try {
       const response = await fetch(`http://localhost:8080/api/users/${storedUser.id}`, {
@@ -61,12 +74,12 @@ export const ContactPage = () => {
       });
 
       if (response.ok) {
-        // Atualiza o localstorage para manter os dados sincronizados
         localStorage.setItem('user', JSON.stringify(updatedData));
-        alert('Contato adicionado com sucesso!');
-        navigate(-1); // Volta para a tela anterior
-      } else {
-        alert('Erro ao atualizar lista de contatos.');
+        // Adiciona o objeto completo ao estado para atualizar a lista na tela na hora
+        setContactObjects([...contactObjects, foundUser]);
+        setFoundUser(null);
+        setCpf('');
+        alert('Contato adicionado!');
       }
     } catch (error) {
       alert('Erro na requisição.');
@@ -75,16 +88,14 @@ export const ContactPage = () => {
 
   return (
     <div className="homeContainer">
-      {/* Header da página de busca */}
       <div className="homeServicosHeader">
-        <span>Adicionar Contato</span>
+        <span>Contatos</span>
         <span className='showAll' onClick={() => navigate(-1)}>Voltar</span>
       </div>
 
-      {/* Container de Input - Reutilizando estilo do Amount.css */}
       <div className="homeAmountContainer contactSearchContainer">
         <div className="searchBox">
-          <label>Informe o CPF do favorecido</label>
+          <label>Adicionar novo contato por CPF</label>
           <input
             className="searchInput"
             type="text"
@@ -92,39 +103,52 @@ export const ContactPage = () => {
             onChange={(e) => setCpf(e.target.value)}
             placeholder="000.000.000-00"
           />
-          <button
-            className="btnSearch"
-            onClick={handleSearch}
-            disabled={loading}
-          >
+          <button className="btnSearch" onClick={handleSearch} disabled={loading}>
             {loading ? 'Buscando...' : 'Pesquisar'}
           </button>
         </div>
         {message && <p className="errorMessage">{message}</p>}
       </div>
 
-      {/* Resultado da Busca - Reutilizando estilo do Home.css */}
+      {/* Resultado da Busca */}
       {foundUser && (
         <div className="resultContainer homeOptionsContainer">
           <div className="contactResultCard">
             <div className="userInfo">
-              <div className="iconCircle">
-                <i className="fa-solid fa-user"></i>
-              </div>
+              <div className="iconCircle"><i className="fa-solid fa-user"></i></div>
               <div className="details">
                 <span className="userName">{foundUser.name}</span>
-                <span className="userCpf">CPF: {foundUser.cpf}</span>
+                <span className="userCpf">{foundUser.cpf}</span>
               </div>
             </div>
             <button className="btnAddContact" onClick={handleAddContact}>
               <i className="fa-solid fa-user-plus"></i>
             </button>
           </div>
-          <div className="sucessMessage">
-            <span>Contato encontrado com sucesso!</span>
-          </div>
         </div>
       )}
+
+      {/* Lista de Contatos Salvos */}
+      <div className="listContacts" style={{ padding: '16px' }}>
+        <span style={{ fontWeight: 'bold', fontSize: '14px', color: '#00599A' }}>Seus Contatos</span>
+        <div className="contactsGrid" style={{ marginTop: '12px' }}>
+          {contactObjects.length === 0 ? (
+            <p className="noContactsMessage">Nenhum contato na lista.</p>
+          ) : (
+            contactObjects.map((contact) => (
+              <div key={contact.id} className="contactCard">
+                <div className="userInfo">
+                  <div className="iconCircle"><i className="fa-solid fa-user"></i></div>
+                  <div className="details">
+                    <span className="userName">{contact.name}</span>
+                    <span className="userCpf">{contact.cpf}</span>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
     </div>
   );
 };

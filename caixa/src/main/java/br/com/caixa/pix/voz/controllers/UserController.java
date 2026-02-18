@@ -23,26 +23,41 @@ import br.com.caixa.pix.voz.services.UserService;
 @RequestMapping("/api/users")
 public class UserController {
 
+    /**
+     * Importa o serviço UserService para lidar com a lógica de negócios relacionada aos usuários.
+     */
     @Autowired
     private UserService userService;
 
+    /**
+     * Retorna todos os usuarios cadastrados no sistema.
+     */
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.findAll());
     }
 
+    /**
+     * Retorna um usuário específico com base no ID fornecido.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable String id) {
         Optional<User> user = userService.findById(id);
         return user.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Cria um novo usuário com base nos dados fornecidos no corpo da requisição.
+     */
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody CreateUserDTO user) {
         System.out.println("Dados recebidos: " + user.getName() + ", " + user.getEmail());
         return ResponseEntity.ok(userService.createUser(user));
     }
 
+    /**
+     * Atualiza um usuário existente com base no ID fornecido e nos dados atualizados no corpo da requisição.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<User> updateItem(@PathVariable String id, @RequestBody UserDTO userDto) {
         return userService.findById(id).map(existingUser -> {
@@ -62,16 +77,31 @@ public class UserController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Exclui um usuário com base no ID fornecido
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
         boolean deleted = userService.deleteUser(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
+    /**
+     * Retorna um usuário específico com base no CPF fornecido
+     */
     @GetMapping("/search/{cpf}")
     public ResponseEntity<User> getUserByCpf(@PathVariable String cpf) {
         return userService.findByCpf(cpf)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Retorna uma lista de usuários com base em uma lista de IDs fornecida no corpo da requisição.
+     */
+    @PostMapping("/list-by-ids")
+    public ResponseEntity<List<User>> getUsersByIds(@RequestBody List<String> ids) {
+        List<User> users = userService.findAllById(ids);
+        return ResponseEntity.ok(users);
     }
 }
