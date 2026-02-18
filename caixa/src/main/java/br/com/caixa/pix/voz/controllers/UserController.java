@@ -5,7 +5,14 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import br.com.caixa.pix.voz.dto.CreateUserDTO;
 import br.com.caixa.pix.voz.dto.UserDTO;
@@ -45,6 +52,9 @@ public class UserController {
             // 2. Atualizar apenas os campos permitidos vindos do DTO
             existingUser.setName(userDto.getName());
             existingUser.setEmail(userDto.getEmail());
+            existingUser.setContacts(userDto.getContacts());
+            existingUser.setCpf(userDto.getCpf());
+            existingUser.setSaldo(userDto.getSaldo());
 
             // Se a password vier preenchida, passamos para o service tratar a criptografia
             if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {

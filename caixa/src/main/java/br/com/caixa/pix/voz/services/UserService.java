@@ -33,7 +33,8 @@ public class UserService {
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
         user.setCpf(dto.getCpf());
-        user.setSaldo(1000);
+        user.setSaldo(dto.getSaldo());
+        user.setContacts(dto.getContacts());
 
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
         user.setPassword(encodedPassword);
@@ -45,6 +46,8 @@ public class UserService {
         return userRepository.findById(id).map(item -> {
             item.setName(updatedItem.getName());
             item.setSaldo(updatedItem.getSaldo());
+            item.setContacts(updatedItem.getContacts());
+            item.setCpf(updatedItem.getCpf());
 
             if (updatedItem.getPassword() != null && !updatedItem.getPassword().isEmpty()
                     && !updatedItem.getPassword().startsWith("$2a$")) {

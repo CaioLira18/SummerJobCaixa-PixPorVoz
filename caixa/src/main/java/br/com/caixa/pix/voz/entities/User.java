@@ -1,5 +1,8 @@
 package br.com.caixa.pix.voz.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,4 +26,5 @@ public class User {
     private String password;
     private String cpf;
     private Integer saldo = 1000;
+    private List<User> contacts = new ArrayList<>();
 }
