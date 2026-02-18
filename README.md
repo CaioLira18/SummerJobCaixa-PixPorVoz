@@ -4,24 +4,19 @@ Este projeto implementa um agente de inteligência artificial por voz integrado 
 
 ## 🚀 Funcionalidades do MVP
 
-* 
-**Speech-to-Text (STT):** Reconhecimento de fala robusto com suporte a variações.
+* **Speech-to-Text (STT):** Reconhecimento de fala robusto com suporte a variações.
 
 
-* 
-**Extração de Entidades (NER):** Identificação automática de valor, destinatário e data a partir da voz.
+* **Extração de Entidades (NER):** Identificação automática de valor, destinatário e data a partir da voz.
 
 
-* 
-**Lógica Conversacional:** Orquestração de diálogos via **Gemini (Google AI Studio)**.
+* **Lógica Conversacional:** Orquestração de diálogos via **Gemini (Google AI Studio)**.
 
 
-* 
-**Confirmação Ativa:** O sistema repete os dados extraídos para validação do utilizador antes de concluir a transação.
+* **Confirmação Ativa:** O sistema repete os dados extraídos para validação do utilizador antes de concluir a transação.
 
 
-* 
-**Interface Visual:** Front-end React desenvolvido seguindo o Design System da CAIXA.
+* **Interface Visual:** Front-end React desenvolvido seguindo o Design System da CAIXA.
 
 
 
