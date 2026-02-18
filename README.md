@@ -43,10 +43,7 @@ Este projeto implementa um agente de inteligência artificial por voz integrado 
 ## 📂 Estrutura do Projeto
 
 * `/ai-agent`: Agente de IA em Python (STT, NER, Processamento).
-* 
-`/client-web`: Interface do utilizador em React.
-
-
+* `/client-web`: Interface do utilizador em React.
 * `/backend-java`: Estrutura de serviços bancários em Spring Boot.
 
 ---
