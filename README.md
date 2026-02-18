@@ -22,24 +22,19 @@ Este projeto implementa um agente de inteligência artificial por voz integrado 
 
 ## 🛠️ Tecnologias Utilizadas
 
-* 
-**Front-end:** React.
+* **Front-end:** React.
 
 
-* 
-**Back-end:** Java (Spring Boot) e Python (FastAPI).
+* **Back-end:** Java (Spring Boot) e Python (FastAPI).
 
 
-* 
-**IA e Voz:** * **Azure AI Services:** Speech to Text e Text to Speech.
+* **IA e Voz:** * **Azure AI Services:** Speech to Text e Text to Speech.
 
 
-* 
-**Google AI Studio (Gemini):** Lógica do agente conversacional.
+* **Google AI Studio (Gemini):** Lógica do agente conversacional.
 
 
-* 
-**Hugging Face:** Suporte ao reconhecimento de entidades.
+* **Hugging Face:** Suporte ao reconhecimento de entidades.
 
 
 
