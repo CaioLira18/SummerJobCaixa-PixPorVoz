@@ -45,23 +45,18 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<User> updateItem(@PathVariable String id, @RequestBody UserDTO userDto) {
-        // 1. Procurar o utilizador existente para não perder dados (como a ROLE ou
-        // Favoritos)
         return userService.findById(id).map(existingUser -> {
 
-            // 2. Atualizar apenas os campos permitidos vindos do DTO
             existingUser.setName(userDto.getName());
             existingUser.setEmail(userDto.getEmail());
-            existingUser.setContacts(userDto.getContacts());
             existingUser.setCpf(userDto.getCpf());
             existingUser.setSaldo(userDto.getSaldo());
+            existingUser.setContactIds(userDto.getContactIds());
 
-            // Se a password vier preenchida, passamos para o service tratar a criptografia
             if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
                 existingUser.setPassword(userDto.getPassword());
             }
 
-            // 3. Chamar o service enviando a entidade já populada
             User updated = userService.updateItem(id, existingUser).orElseThrow();
             return ResponseEntity.ok(updated);
         }).orElse(ResponseEntity.notFound().build());
@@ -71,5 +66,12 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
         boolean deleted = userService.deleteUser(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/search/{cpf}")
+    public ResponseEntity<User> getUserByCpf(@PathVariable String cpf) {
+        return userService.findByCpf(cpf)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

@@ -34,7 +34,7 @@ public class UserService {
         user.setEmail(dto.getEmail());
         user.setCpf(dto.getCpf());
         user.setSaldo(dto.getSaldo());
-        user.setContacts(dto.getContacts());
+        user.setContactIds(dto.getContactIds());
 
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
         user.setPassword(encodedPassword);
@@ -46,7 +46,7 @@ public class UserService {
         return userRepository.findById(id).map(item -> {
             item.setName(updatedItem.getName());
             item.setSaldo(updatedItem.getSaldo());
-            item.setContacts(updatedItem.getContacts());
+            item.setContactIds(updatedItem.getContactIds());
             item.setCpf(updatedItem.getCpf());
 
             if (updatedItem.getPassword() != null && !updatedItem.getPassword().isEmpty()
@@ -64,5 +64,9 @@ public class UserService {
             System.out.println("Usuário deletado: " + id);
             return true;
         }).orElse(false);
+    }
+
+    public Optional<User> findByCpf(String cpf) {
+        return userRepository.findByCpf(cpf);
     }
 }
