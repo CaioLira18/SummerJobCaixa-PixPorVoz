@@ -9,6 +9,7 @@ import { Footer } from './components/Footer'
 import { TransaçãoPagina } from './pages/TransaçãoPagina'
 import PixConfigurationLoading from './pages/PixConfigurationLoading'
 import AuthPage from './pages/AuthPage'
+import { ContactPage } from './pages/ContactPage'
 function App() {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -21,6 +22,7 @@ function App() {
           <Route path="/chat" element={<Chat />} />
           <Route path="/loading" element={<LoadingPage />} />
           <Route path="/areaPix" element={<TransaçãoPagina />} />
+          <Route path="/contacts" element={<ContactPage />} />
         </Route>
         <Route path="/loadingConfigurationPage" element={<PixConfigurationLoading />} />
         <Route path="/login" element={<AuthPage />} />

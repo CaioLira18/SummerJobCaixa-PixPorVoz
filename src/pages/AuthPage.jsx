@@ -4,65 +4,75 @@ import React, { useState } from "react";
 const AuthPage = () => {
   const API_URL = "http://localhost:8080/api";
 
-  // Estados de Controle
-  const [isLogin, setIsLogin] = useState(true); // Alterna entre Login e Registro
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [mostrarSenha, setMostrarSenha] = useState(false);
-  const [biometria, setBiometria] = useState(true);
+  {/**
+    Estados para controle de fluxo, mensagens e campos do formulário
+    */}
+  const [isLogin, setIsLogin] = useState(true); // Controla se estamos no modo Login ou Registro
+  const [loading, setLoading] = useState(false); // Controla o estado de carregamento durante a requisição
+  const [error, setError] = useState(""); // Armazena mensagens de erro para exibir ao usuário
+  const [success, setSuccess] = useState(""); // Armazena mensagens de sucesso para exibir ao usuário
+  const [mostrarSenha, setMostrarSenha] = useState(false); // Controla a visibilidade da senha
+  const [biometria, setBiometria] = useState(true); // Controla o estado da opção de biometria (ativo/inativo)
 
-  // Estados dos Campos
+  {/**
+  * Campos de Formulário
+    */}
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [cpf, setCpf] = useState("");
 
   const handleAuth = async () => {
-    setLoading(true);
-    setError("");
-    setSuccess("");
+    setLoading(true); // Inicia o estado de carregamento
+    setError(""); // Limpa mensagens de erro anteriores
+    setSuccess(""); // Limpa mensagens de sucesso anteriores
 
-    const endpoint = isLogin ? "/auth/login" : "/users";
+    const endpoint = isLogin ? "/auth/login" : "/users"; // Define o endpoint com base no modo (Login ou Registro)
 
-    // Certifique-se que o saldo aqui é enviado como número ou compatível com o DTO
+    {/**
+      se for login, o payload contém apenas email e senha. 
+      Se for registro, inclui nome, email, cpf, senha e saldo inicial.
+      */}
     const payload = isLogin
       ? { email, password }
       : {
-        name: name,      // Verifique se no DTO não é 'nome'
+        name: name,
         email: email,
         cpf: cpf,
         password: password,
-        saldo: 1000      // Enviando como número
+        saldo: 1000 // Saldo inicial para novos usuários
       };
 
     try {
-      // Adicione /api se não estiver no Proxy do Vite/React
-      const response = await axios.post(`${API_URL}${endpoint}`, payload);
+      const response = await axios.post(`${API_URL}${endpoint}`, payload); // Faz a requisição para o endpoint correto com o payload adequado
 
+      {/**
+        trata a resposta da API. Se for login, armazena os dados do usuário no localStorage e exibe uma mensagem de sucesso.
+        Se for registro, exibe uma mensagem de sucesso e, após um breve atraso, 
+        muda para o modo de login para que o usuário possa acessar sua nova conta.
+        */}
       if (response.data) {
         if (isLogin) {
-          localStorage.setItem("user", JSON.stringify(response.data));
-          setSuccess("Login realizado!");
-          setTimeout(() => window.location.href = "/", 1000);
+          localStorage.setItem("user", JSON.stringify(response.data)); // Armazena os dados do usuário no localStorage para manter a sessão
+          setSuccess("Login realizado!"); // Exibe mensagem de sucesso
+          setTimeout(() => window.location.href = "/", 1000); // Redireciona para a página principal após um breve atraso
         } else {
-          setSuccess("Conta criada com sucesso!");
-          // Pequeno delay para o usuário ler a mensagem antes de trocar para o login
-          setTimeout(() => {
-            setIsLogin(true);
-            setSuccess("");
+          setSuccess("Conta criada com sucesso!"); // Exibe mensagem de sucesso para registro
+          setTimeout(() => { // Após um breve atraso, muda para o modo de login para que o usuário possa acessar sua nova conta
+            setIsLogin(true); // Muda para o modo de login
+            setSuccess(""); // Limpa a mensagem de sucesso para evitar confusão
           }, 2000);
         }
       }
     } catch (error) {
-      console.error("Erro detalhado:", error.response?.data);
-      setError(error.response?.data?.message || "Erro ao registrar. Verifique os dados.");
+      console.error("Erro detalhado:", error.response?.data); // Log detalhado do erro para facilitar a depuração
+      setError(error.response?.data?.message || "Erro ao registrar. Verifique os dados."); // Exibe a mensagem de erro retornada pela API ou uma mensagem genérica
     } finally {
       setLoading(false);
     }
   };
 
-  const background = "https://res.cloudinary.com/dthgw4q5d/image/upload/v1771106356/mulher_nvzqry.png";
+  const background = "https://res.cloudinary.com/dthgw4q5d/image/upload/v1771106356/mulher_nvzqry.png"; // Imagem de fundo para a página de autenticação
 
   return (
     <div className="login-container" style={{ backgroundImage: `url(${background})` }}>
@@ -116,13 +126,25 @@ const AuthPage = () => {
           </div>
         </div>
 
+        {/**
+         * Exibe mensagens de erro ou sucesso com estilos distintos para cada tipo de mensagem.
+         */}
         {error && <p className="message error">{error}</p>}
         {success && <p className="message success">{success}</p>}
 
+        {/**
+         * Botão de Login/Cadastro que chama a função handleAuth ao ser clicado. 
+         * O texto do botão muda dinamicamente com base no modo atual (Login ou Registro) e 
+         * é desabilitado durante o processo de autenticação para evitar múltiplos cliques.
+         */}
         <button className="login-button" onClick={handleAuth} disabled={loading}>
           {loading ? "Processando..." : isLogin ? "LOGIN" : "CADASTRAR"}
         </button>
 
+          {/**
+           * Opção de biometria que só é exibida no modo de Login. 
+           * O estado da biometria é controlado por um toggle que altera a classe CSS para indicar se está ativo ou não.
+           */}
         {isLogin && (
           <div className="biometria">
             <span>Acessar com biometria</span>
@@ -132,6 +154,11 @@ const AuthPage = () => {
           </div>
         )}
 
+        {/**
+         * Link para alternar entre os modos de Login e Registro. 
+         * Ao clicar, ele limpa as mensagens de erro e 
+         * sucesso para evitar confusão ao mudar de modo.
+         */}
         <button className="link-button" onClick={() => {
           setIsLogin(!isLogin);
           setError("");
