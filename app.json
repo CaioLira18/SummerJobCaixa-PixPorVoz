@@ -5,8 +5,9 @@
     "version": "1.0.0",
     "extra": {
       "eas": {
-        "projectId": "030babef-aea3-4444-acb3-f9e0a51afd50"
+        "projectId": "1e16c388-3118-48ab-98a9-ef5c45d40188"
       }
-    }
+    },
+    "owner": "caixa-project"
   }
 }
