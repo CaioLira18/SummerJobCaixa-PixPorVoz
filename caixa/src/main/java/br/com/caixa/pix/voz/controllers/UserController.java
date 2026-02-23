@@ -24,7 +24,8 @@ import br.com.caixa.pix.voz.services.UserService;
 public class UserController {
 
     /**
-     * Importa o serviço UserService para lidar com a lógica de negócios relacionada aos usuários.
+     * Importa o serviço UserService para lidar com a lógica de negócios relacionada
+     * aos usuários.
      */
     @Autowired
     private UserService userService;
@@ -56,17 +57,35 @@ public class UserController {
     }
 
     /**
-     * Atualiza um usuário existente com base no ID fornecido e nos dados atualizados no corpo da requisição.
+     * Atualiza um usuário existente com base no ID fornecido e nos dados
+     * atualizados no corpo da requisição.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateItem(@PathVariable String id, @RequestBody UserDTO userDto) {
+    public ResponseEntity<User> updateItem(
+            @PathVariable String id,
+            @RequestBody UserDTO userDto) {
+
         return userService.findById(id).map(existingUser -> {
 
-            existingUser.setName(userDto.getName());
-            existingUser.setEmail(userDto.getEmail());
-            existingUser.setCpf(userDto.getCpf());
-            existingUser.setSaldo(userDto.getSaldo());
-            existingUser.setContactIds(userDto.getContactIds());
+            if (userDto.getName() != null) {
+                existingUser.setName(userDto.getName());
+            }
+
+            if (userDto.getEmail() != null) {
+                existingUser.setEmail(userDto.getEmail());
+            }
+
+            if (userDto.getCpf() != null) {
+                existingUser.setCpf(userDto.getCpf());
+            }
+
+            if (userDto.getSaldo() != null) {
+                existingUser.setSaldo(userDto.getSaldo());
+            }
+
+            if (userDto.getContactIds() != null) {
+                existingUser.setContactIds(userDto.getContactIds());
+            }
 
             if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
                 existingUser.setPassword(userDto.getPassword());
@@ -74,6 +93,7 @@ public class UserController {
 
             User updated = userService.updateItem(id, existingUser).orElseThrow();
             return ResponseEntity.ok(updated);
+
         }).orElse(ResponseEntity.notFound().build());
     }
 
@@ -97,7 +117,8 @@ public class UserController {
     }
 
     /**
-     * Retorna uma lista de usuários com base em uma lista de IDs fornecida no corpo da requisição.
+     * Retorna uma lista de usuários com base em uma lista de IDs fornecida no corpo
+     * da requisição.
      */
     @PostMapping("/list-by-ids")
     public ResponseEntity<List<User>> getUsersByIds(@RequestBody List<String> ids) {

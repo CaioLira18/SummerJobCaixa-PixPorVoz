@@ -108,7 +108,7 @@ export const Home = ({ isVisible }) => {
           </div>
           <Link to="/contacts">
             <div className="homeServicoCard">
-              <div className="iconCircle"><i className="fa-solid fa-dollar-sign"></i></div>
+              <div className="iconCircle"><i class="fa-solid fa-star"></i></div>
               <span>Seus Favoritos</span>
             </div>
           </Link>

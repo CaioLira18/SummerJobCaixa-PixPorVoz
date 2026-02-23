@@ -16,10 +16,6 @@ export const Footer = () => {
         <span>Pix</span>
       </div>
       <div className="bottomNavItem">
-        <i className="fa-solid fa-comment"></i>
-        <span>Chat</span>
-      </div>
-      <div className="bottomNavItem">
         <i className="fa-solid fa-bars"></i>
         <span>Menu</span>
       </div>
