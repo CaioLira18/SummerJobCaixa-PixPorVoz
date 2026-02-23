@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
-from huggingface_hub import InferenceClient
+from groq import Groq  # Importação alterada
 
 # Importações dos seus módulos locais
 from ner import extrair_entidades
@@ -14,13 +14,13 @@ from normalizer import normalizar_texto
 load_dotenv()
 
 # Configurações do Ambiente
-HF_TOKEN = os.getenv("HUGGINGFACE_TOKEN")
-MODEL_ID = "Qwen/Qwen2.5-7B-Instruct" 
+GROQ_API_KEY = os.getenv("GROQ_API")
+MODEL_ID = "llama-3.3-70b-versatile" # Modelo sugerido para alta performance no Groq
 
-app = FastAPI(title="Pix Voice - Sistema com Memória e Treino")
+app = FastAPI(title="Pix Voice - Sistema Groq")
 
-# Inicializa o cliente Hugging Face
-client_hf = InferenceClient(model=MODEL_ID, token=HF_TOKEN)
+# Inicializa o cliente Groq
+client_groq = Groq(api_key=GROQ_API_KEY)
 
 app.add_middleware(
     CORSMiddleware,
@@ -29,14 +29,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Modelo de dados que recebe o texto e o histórico do React
 class ComandoVoz(BaseModel):
     texto: str
     historico: list = [] 
 
 def salvar_historico_para_treino(texto_usuario, resposta_ia, historico_anterior):
-    """Salva a conversa no formato JSONL para futuro Fine-Tuning"""
     diretorio = "json"
+    if not os.path.exists(diretorio): os.makedirs(diretorio)
+    
     arquivo_treino = os.path.join(diretorio, "treino_pix.jsonl")
     
     entrada = {
@@ -45,12 +45,10 @@ def salvar_historico_para_treino(texto_usuario, resposta_ia, historico_anterior)
         ]
     }
     
-    # Adiciona o contexto anterior
     for msg in historico_anterior:
         role = "user" if msg['sender'] == 'user' else "assistant"
         entrada["messages"].append({"role": role, "content": msg['text']})
     
-    # Adiciona a interação atual
     entrada["messages"].append({"role": "user", "content": texto_usuario})
     entrada["messages"].append({"role": "assistant", "content": resposta_ia})
     
@@ -58,7 +56,7 @@ def salvar_historico_para_treino(texto_usuario, resposta_ia, historico_anterior)
         f.write(json.dumps(entrada, ensure_ascii=False) + "\n")
 
 def gerar_conversa_ia(texto_usuario, entidades, historico_anterior):
-    """Envia o prompt + histórico para a IA gerar a resposta"""
+    """Envia o prompt + histórico para o Groq gerar a resposta"""
     prompt_sistema = (
         "Você é o assistente virtual da Caixa Econômica Federal. "
         "Sua função é realizar transações Pix por voz. "
@@ -68,26 +66,26 @@ def gerar_conversa_ia(texto_usuario, entidades, historico_anterior):
         "Caso falte algo, peça a informação que falta de forma curta."
     )
 
-    # Monta o payload de mensagens com histórico (Memória Estilo GPT)
     messages = [{"role": "system", "content": prompt_sistema}]
     
     for msg in historico_anterior:
         role = "user" if msg['sender'] == 'user' else "assistant"
         messages.append({"role": role, "content": msg['text']})
 
-    # Adiciona a frase atual do usuário
     messages.append({"role": "user", "content": texto_usuario})
 
     try:
-        response = client_hf.chat_completion(
+        # Chamada específica do Groq
+        response = client_groq.chat.completions.create(
+            model=MODEL_ID,
             messages=messages,
-            max_tokens=60,
-            temperature=0.2 # Baixa para evitar que a IA invente coisas
+            max_tokens=100,
+            temperature=0.2
         )
         return response.choices[0].message.content
     except Exception as e:
-        print(f"Erro HF: {e}")
-        # Fallback para o agente local caso a API falhe
+        print(f"Erro Groq: {e}")
+        # Fallback para o agente local (agente_pix) caso a API falhe
         return agente_pix(texto_usuario, entidades)
 
 @app.post("/ouvir")
@@ -97,16 +95,10 @@ def ouvir_comando(comando: ComandoVoz):
         if len(texto_original) < 2:
             return {"resposta": "Desculpe, não consegui ouvir direito."}
 
-        # 1. Normaliza o texto (remove ruídos, padroniza palavras)
         texto_limpo = normalizar_texto(texto_original)
-        
-        # 2. Extrai entidades via Azure (opcional para logs/verificação)
         entidades = extrair_entidades(texto_limpo)
         
-        # 3. Gera a resposta usando a IA com Memória
         resposta_final = gerar_conversa_ia(texto_limpo, entidades, comando.historico)
-
-        # 4. Salva a interação para o seu banco de dados de treino JSON
         salvar_historico_para_treino(texto_original, resposta_final, comando.historico)
 
         return {
