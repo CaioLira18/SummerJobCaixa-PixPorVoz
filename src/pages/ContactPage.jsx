@@ -33,7 +33,27 @@ export const ContactPage = () => {
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
-    loadContacts(storedUser);
+    if (!storedUser?.id) return;
+
+    // Busca o usuário atualizado do backend para garantir contactIds frescos
+    fetch(`http://localhost:8080/api/users/${storedUser.id}`)
+      .then(res => res.ok ? res.json() : null)
+      .then(freshUser => {
+        if (!freshUser) return;
+
+        // Sincroniza o localStorage com os dados mais recentes
+        const updatedUser = {
+          ...storedUser,
+          contactIds: freshUser.contactIds || []
+        };
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+
+        loadContacts(updatedUser);
+      })
+      .catch(() => {
+        // Fallback: tenta com o que está no localStorage
+        loadContacts(storedUser);
+      });
   }, []);
 
   const handleSearch = async () => {
