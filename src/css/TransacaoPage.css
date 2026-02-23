@@ -1,6 +1,6 @@
 .transacao-container {
   width: 100%;
-  min-height: 100vh;
+  height: auto;
   background-color: #f5f5f5;
   overflow-x: hidden;
 }
@@ -240,7 +240,7 @@
 }
 
 .pix-por-voz {
-  width: 100%;
+  width: 450px;
   background: linear-gradient(135deg, #0066CC 0%, #0052A3 100%);
   border: none;
   border-radius: 12px;

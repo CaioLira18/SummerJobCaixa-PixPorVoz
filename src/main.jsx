@@ -13,7 +13,7 @@ import './css/TransacaoPage.css'
 import './css/PixConfigurationPage.css'
 import './css/Login.css'
 import './css/ContactPage.css'
-import App from './App.jsx'
+import App from './App'
 import { BrowserRouter } from 'react-router-dom'
 
 createRoot(document.getElementById('root')).render(
