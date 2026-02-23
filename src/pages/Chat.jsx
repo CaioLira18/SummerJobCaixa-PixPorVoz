@@ -6,10 +6,27 @@ export const Chat = () => {
     const [loading, setLoading] = useState(false);
     const location = useLocation();
     const chatEndRef = useRef(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado para controlar se o usuário está autenticado ou não
+    const [name, setName] = useState(''); // Estado para armazenar o nome do usuário, que pode ser exibido na interface para uma experiência mais personalizada
+    const [listFavorites, setListFavorites] = useState([]); // Estado para armazenar o nome do usuário, que pode ser exibido na interface para uma experiência mais personalizada
+
 
     const scrollToBottom = () => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            try {
+                const parsedUser = JSON.parse(storedUser); // Tenta parsear os dados do usuário armazenados no localStorage
+                setIsAuthenticated(true); // Atualiza o estado para indicar que o usuário está autenticado
+                setName(parsedUser.name || ''); // Armazena o nome do usuário no estado para uso futuro na interface
+            } catch (err) {
+                console.error("Erro ao processar usuário do localStorage", err); // Log detalhado do erro para facilitar a depuração caso o JSON esteja corrompido ou mal formatado
+            }
+        }
+    }, []);
 
     useEffect(() => {
         if (location.state?.historicoInicial) {
@@ -32,45 +49,56 @@ export const Chat = () => {
         }]);
     };
 
+    // 1. Carregar nomes dos contatos do banco Java ao iniciar
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            const parsedUser = JSON.parse(storedUser);
+            // Busca detalhes dos contatos usando os IDs do usuário
+            if (parsedUser.contactIds && parsedUser.contactIds.length > 0) {
+                fetch("http://localhost:8080/api/users/list-by-ids", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(parsedUser.contactIds)
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        const nomes = data.map(u => u.name);
+                        setListFavorites(nomes);
+                    })
+                    .catch(err => console.error("Erro ao carregar contatos do Java", err));
+            }
+        }
+    }, []);
+
     const iniciarVoz = () => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) return alert("Navegador não suportado");
-
         const recognition = new SpeechRecognition();
         recognition.lang = "pt-BR";
 
-        recognition.onstart = () => setLoading(true);
-
         recognition.onresult = async (event) => {
             const transcricao = event.results[0][0].transcript;
-            
-            // 1. Adiciona a mensagem do usuário na tela primeiro
-            const novaMensagemUsuario = { text: transcricao, sender: 'user' };
-            adicionarMensagem(transcricao, 'user');
-
+            setMessages(prev => [...prev, { text: transcricao, sender: 'user', time: new Date().toLocaleTimeString() }]);
             setLoading(true);
 
             try {
-                // 2. Envia o histórico ATUAL para o servidor
                 const res = await fetch("http://127.0.0.1:8000/ouvir", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ 
+                    body: JSON.stringify({
                         texto: transcricao,
-                        historico: messages // <--- Aqui passamos a memória do chat
+                        historico: messages,
+                        contatos_validos: listFavorites // Envia nomes para o Python validar
                     }),
                 });
-                
                 const data = await res.json();
-                adicionarMensagem(data.resposta, 'bot');
+                setMessages(prev => [...prev, { text: data.resposta, sender: 'bot', time: new Date().toLocaleTimeString() }]);
             } catch (err) {
-                adicionarMensagem("Erro ao conectar com o servidor.", 'bot');
+                console.error("Erro na conexão IA", err);
             } finally {
                 setLoading(false);
             }
         };
-
-        recognition.onend = () => {};
         recognition.start();
     };
 
