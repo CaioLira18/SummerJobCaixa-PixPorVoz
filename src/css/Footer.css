@@ -6,6 +6,7 @@
     align-items: center;
     gap: 55px;
     color: white;
+    position: relative;
 }
 
 .bottomNavItem {
