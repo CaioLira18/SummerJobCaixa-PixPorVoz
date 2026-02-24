@@ -61,37 +61,15 @@ def gerar_conversa_ia(texto_usuario, historico_anterior, contatos_validos):
             break
 
     if not contato_mencionado:
-        return "Por segurança, você só pode enviar Pix para contatos favoritos cadastrados no aplicativo."
+        return {
+            "texto": "Por segurança, você só pode enviar Pix para contatos favoritos cadastrados no aplicativo.",
+            "status": "BLOCKED"
+        }
 
-    lista_permitida = ", ".join(contatos_validos)
-
-    prompt_sistema = (
-        "Você é o assistente virtual da Caixa Econômica Federal para Pix por voz. "
-        f"LISTA DE CONTATOS FAVORITOS: [{lista_permitida}]. "
-        "Só é permitido enviar Pix para contatos da lista. "
-        "Nunca aceite chave Pix manual. "
-        "Responda de forma curta e profissional."
-    )
-
-    messages = [{"role": "system", "content": prompt_sistema}]
-
-    for msg in historico_anterior:
-        role = "user" if msg["sender"] == "user" else "assistant"
-        messages.append({"role": role, "content": msg["text"]})
-
-    messages.append({"role": "user", "content": texto_usuario})
-
-    try:
-        response = client_groq.chat.completions.create(
-            model=MODEL_ID,
-            messages=messages,
-            temperature=0.1
-        )
-        return response.choices[0].message.content
-
-    except Exception as e:
-        print(f"Erro Groq: {e}")
-        return "Erro técnico. Tente novamente."
+    return {
+        "texto": f"Pix enviado com sucesso para {contato_mencionado.capitalize()}.",
+        "status": "COMPLETED"
+    }
 
 # =========================
 # GERAR ÁUDIO ELEVENLABS
@@ -122,23 +100,27 @@ def ouvir_comando(comando: ComandoVoz):
     try:
         texto_limpo = normalizar_texto(comando.texto)
 
-        resposta_final = gerar_conversa_ia(
+        resultado = gerar_conversa_ia(
             texto_limpo,
             comando.historico,
             comando.contatos_validos
         )
 
-        arquivo_audio = gerar_audio_eleven(resposta_final)
+        arquivo_audio = gerar_audio_eleven(resultado["texto"])
 
         return {
             "texto_falado": comando.texto,
-            "resposta": resposta_final,
+            "resposta": resultado["texto"],
+            "status": resultado["status"],
             "audio_url": f"/audio/{arquivo_audio}"
         }
 
     except Exception as e:
         print(f"Erro: {e}")
-        return {"resposta": "Erro ao processar o comando de voz."}
+        return {
+            "resposta": "Erro ao processar o comando de voz.",
+            "status": "ERROR"
+        }
 
 # =========================
 # ROTA PARA SERVIR ÁUDIO

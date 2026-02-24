@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 export const Chat = () => {
     const [messages, setMessages] = useState([]);
@@ -12,6 +13,7 @@ export const Chat = () => {
 
     const location = useLocation();
     const chatEndRef = useRef(null);
+    const navigate = useNavigate();
 
     const scrollToBottom = () => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -88,6 +90,13 @@ export const Chat = () => {
                 // 🔊 Tocar áudio retornado pela API
                 if (data.audio_url) {
                     tocarAudioBackend(data.audio_url);
+                }
+                if (data.status === "COMPLETED") {
+                    navigate("/pixConfirmado");
+
+                    setTimeout(() => {
+                        navigate("/pixConcluido");
+                    }, 1500);
                 }
 
             } catch (err) {
