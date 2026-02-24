@@ -8,10 +8,10 @@ export const Chat = () => {
     const [voiceSpeed, setVoiceSpeed] = useState(1.0);
     const [awaitingAuth, setAwaitingAuth] = useState(false);
     const [pendingPix, setPendingPix] = useState(null);
+    const [listFavorites, setListFavorites] = useState([]);
 
     const location = useLocation();
     const chatEndRef = useRef(null);
-    const [listFavorites, setListFavorites] = useState([]);
 
     const scrollToBottom = () => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -19,30 +19,29 @@ export const Chat = () => {
 
     useEffect(scrollToBottom, [messages, loading]);
 
-    const falarTexto = (texto) => {
-        const utterance = new SpeechSynthesisUtterance(texto);
-        utterance.lang = "pt-BR";
-        utterance.rate = voiceSpeed;
-        window.speechSynthesis.speak(utterance);
-    };
-
     const adicionarMensagem = (texto, remetente) => {
         setMessages(prev => [...prev, {
             text: texto,
             sender: remetente,
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }]);
-
-        if (remetente === "bot") {
-            falarTexto(texto);
-        }
     };
 
-    // Carregar favoritos
+    // 🔊 Tocar áudio vindo do backend
+    const tocarAudioBackend = (audioUrl) => {
+        const audio = new Audio(`http://127.0.0.1:8000${audioUrl}`);
+        audio.playbackRate = voiceSpeed;
+        audio.play();
+    };
+
+    // =========================
+    // CARREGAR FAVORITOS
+    // =========================
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
             const parsedUser = JSON.parse(storedUser);
+
             if (parsedUser.contactIds?.length > 0) {
                 fetch("http://localhost:8080/api/users/list-by-ids", {
                     method: "POST",
@@ -57,6 +56,9 @@ export const Chat = () => {
         }
     }, []);
 
+    // =========================
+    // RECONHECIMENTO DE VOZ
+    // =========================
     const iniciarVoz = () => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = new SpeechRecognition();
@@ -64,6 +66,7 @@ export const Chat = () => {
 
         recognition.onresult = async (event) => {
             const transcricao = event.results[0][0].transcript;
+
             adicionarMensagem(transcricao, "user");
             setLoading(true);
 
@@ -79,27 +82,17 @@ export const Chat = () => {
                 });
 
                 const data = await res.json();
+
                 adicionarMensagem(data.resposta, "bot");
 
-                // Controle de estados vindos do backend
-                if (data.status === "CONFIRMATION_REQUIRED") {
-                    setPendingPix({
-                        valor: data.valor,
-                        destinatario: data.destinatario
-                    });
-                }
-
-                if (data.status === "AUTH_REQUIRED") {
-                    setAwaitingAuth(true);
-                }
-
-                if (data.status === "COMPLETED") {
-                    setAwaitingAuth(false);
-                    setPendingPix(null);
+                // 🔊 Tocar áudio retornado pela API
+                if (data.audio_url) {
+                    tocarAudioBackend(data.audio_url);
                 }
 
             } catch (err) {
                 console.error("Erro IA", err);
+                adicionarMensagem("Erro ao processar comando.", "bot");
             } finally {
                 setLoading(false);
             }
@@ -108,6 +101,9 @@ export const Chat = () => {
         recognition.start();
     };
 
+    // =========================
+    // AUTENTICAÇÃO SIMULADA
+    // =========================
     const autenticar = () => {
         adicionarMensagem(`Autenticando via ${authMethod}...`, "bot");
 
@@ -142,14 +138,20 @@ export const Chat = () => {
                     <div key={index} className={`containerBox ${msg.sender === 'user' ? 'userAlign' : 'botAlign'}`}>
                         <div className="messageBox">
                             {msg.sender === 'user' && (
-                                <div className="userProfile"><i className="fa-solid fa-user"></i></div>
+                                <div className="userProfile">
+                                    <i className="fa-solid fa-user"></i>
+                                </div>
                             )}
+
                             <div className="messageContent">
                                 <div className="messageText">{msg.text}</div>
                                 <div className="messageTime">{msg.time}</div>
                             </div>
+
                             {msg.sender === 'bot' && (
-                                <div className="userProfile"><i className="fa-solid fa-robot"></i></div>
+                                <div className="userProfile">
+                                    <i className="fa-solid fa-robot"></i>
+                                </div>
                             )}
                         </div>
                     </div>

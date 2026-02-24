@@ -7,7 +7,6 @@ import { Terminal } from './pages/Terminal'
 import Chat from './pages/Chat'
 import { Footer } from './components/Footer'
 import { TransaçãoPagina } from './pages/TransaçãoPagina'
-import PixConfigurationLoading from './pages/PixConfigurationLoading'
 import AuthPage from './pages/AuthPage'
 import { ContactPage } from './pages/ContactPage'
 function App() {
@@ -24,7 +23,6 @@ function App() {
           <Route path="/areaPix" element={<TransaçãoPagina />} />
           <Route path="/contacts" element={<ContactPage />} />
         </Route>
-        <Route path="/loadingConfigurationPage" element={<PixConfigurationLoading />} />
         <Route path="/login" element={<AuthPage />} />
       </Routes>
     </div>

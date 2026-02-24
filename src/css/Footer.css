@@ -1,12 +1,18 @@
 .bottomNav {
-    padding: 15px;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 500px;
+    height: 64px;
+    padding: 10px 0;
     background-color: #0d5cab;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
-    gap: 55px;
     color: white;
-    position: relative;
+    z-index: 1000;
 }
 
 .bottomNavItem {
