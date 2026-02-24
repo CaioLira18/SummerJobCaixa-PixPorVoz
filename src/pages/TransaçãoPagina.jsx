@@ -51,14 +51,6 @@ export const TransaçãoPagina = () => {
             </div>
             <span className="option-text">Ler QR Code</span>
           </button>
-
-          <Link className='pix-option-card' to={'/loadingConfigurationPage'} >
-            <span className='novoCard'>Novo</span>
-            <div className="option-icon">
-              <i class="fa-solid fa-qrcode"></i>
-            </div>
-            <span className="option-text">Pix por Voz</span>
-          </Link>
         </div>
 
         <Link to={'/chat'}>

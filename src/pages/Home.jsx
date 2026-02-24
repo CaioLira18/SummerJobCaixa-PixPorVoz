@@ -59,27 +59,6 @@ export const Home = ({ isVisible }) => {
           </Link>
         </div>
 
-        <div className="homeOptionsContainer">
-          <Link to={'/chat'}>
-            <button className="pix-por-voz">
-              <div className="voz-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" stroke="white" strokeWidth="2" />
-                  <path d="M19 10v2a7 7 0 0 1-14 0v-2" stroke="white" strokeWidth="2" />
-                  <line x1="12" y1="19" x2="12" y2="23" stroke="white" strokeWidth="2" />
-                </svg>
-              </div>
-              <div className="voz-text">
-                <h3>Pix por Voz</h3>
-                <p>Faça transferências usando sua voz</p>
-              </div>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M9 18l6-6-6-6" stroke="white" strokeWidth="2" />
-              </svg>
-            </button>
-          </Link>
-        </div>
-
         <div className="homeServicosHeader">
           <span>Serviços</span>
           <span className='showAll'>Mostrar Todos</span>
