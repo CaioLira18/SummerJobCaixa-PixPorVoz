@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 
 export const Chat = () => {
@@ -7,11 +6,11 @@ export const Chat = () => {
     const [loading, setLoading] = useState(false);
     const [authMethod, setAuthMethod] = useState("biometria");
     const [voiceSpeed, setVoiceSpeed] = useState(1.0);
+
     const [awaitingAuth, setAwaitingAuth] = useState(false);
     const [pendingPix, setPendingPix] = useState(null);
     const [listFavorites, setListFavorites] = useState([]);
 
-    const location = useLocation();
     const chatEndRef = useRef(null);
     const navigate = useNavigate();
 
@@ -29,7 +28,6 @@ export const Chat = () => {
         }]);
     };
 
-    // 🔊 Tocar áudio vindo do backend
     const tocarAudioBackend = (audioUrl) => {
         const audio = new Audio(`http://127.0.0.1:8000${audioUrl}`);
         audio.playbackRate = voiceSpeed;
@@ -41,25 +39,25 @@ export const Chat = () => {
     // =========================
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            const parsedUser = JSON.parse(storedUser);
+        if (!storedUser) return;
 
-            if (parsedUser.contactIds?.length > 0) {
-                fetch("http://localhost:8080/api/users/list-by-ids", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(parsedUser.contactIds)
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        setListFavorites(data.map(u => u.name));
-                    });
-            }
+        const parsedUser = JSON.parse(storedUser);
+
+        if (parsedUser.contactIds?.length > 0) {
+            fetch("http://localhost:8080/api/users/list-by-ids", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(parsedUser.contactIds)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    setListFavorites(data.map(u => u.name));
+                });
         }
     }, []);
 
     // =========================
-    // RECONHECIMENTO DE VOZ
+    // VOZ
     // =========================
     const iniciarVoz = () => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -87,16 +85,17 @@ export const Chat = () => {
 
                 adicionarMensagem(data.resposta, "bot");
 
-                // 🔊 Tocar áudio retornado pela API
                 if (data.audio_url) {
                     tocarAudioBackend(data.audio_url);
                 }
-                if (data.status === "COMPLETED") {
-                    navigate("/pixConfirmado");
 
-                    setTimeout(() => {
-                        navigate("/pixConcluido");
-                    }, 1500);
+                // 🔐 EXEMPLO DE STATUS ESPERADO DO BACKEND
+                if (data.status === "REQUIRE_AUTH") {
+                    setPendingPix({
+                        valor: data.valor,
+                        destinatario: data.destinatario
+                    });
+                    setAwaitingAuth(true);
                 }
 
             } catch (err) {
@@ -111,22 +110,27 @@ export const Chat = () => {
     };
 
     // =========================
-    // AUTENTICAÇÃO SIMULADA
+    // AUTENTICAÇÃO
     // =========================
     const autenticar = () => {
         adicionarMensagem(`Autenticando via ${authMethod}...`, "bot");
 
         setTimeout(() => {
-            adicionarMensagem("Pix realizado com sucesso ✅", "bot");
             setAwaitingAuth(false);
-            setPendingPix(null);
+
+            navigate("/pixConfirmado");
+
+            setTimeout(() => {
+                navigate("/pixConcluido");
+            }, 1500);
+
         }, 2000);
     };
 
     return (
         <div>
 
-            {/* CONFIGURAÇÃO DENTRO DO CHAT */}
+            {/* CONFIG */}
             <div className="chatConfigBar">
                 <select value={authMethod} onChange={(e) => setAuthMethod(e.target.value)}>
                     <option value="biometria">Biometria</option>
@@ -177,15 +181,18 @@ export const Chat = () => {
                 <div ref={chatEndRef} />
             </div>
 
-            {/* AUTENTICAÇÃO */}
+            {/* 🔐 AUTENTICAÇÃO */}
             {awaitingAuth && (
-                <div className="authBox">
-                    <h3>Autenticação necessária</h3>
-                    <p>Valor: R$ {pendingPix?.valor}</p>
-                    <p>Destinatário: {pendingPix?.destinatario}</p>
-                    <button onClick={autenticar}>
-                        Autenticar via {authMethod}
-                    </button>
+                <div className="authOverlay">
+                    <div className="authBox">
+                        <h3>Autenticação necessária</h3>
+                        <p><strong>Valor:</strong> R$ {pendingPix?.valor}</p>
+                        <p><strong>Destinatário:</strong> {pendingPix?.destinatario}</p>
+
+                        <button onClick={autenticar}>
+                            Autenticar via {authMethod}
+                        </button>
+                    </div>
                 </div>
             )}
 

@@ -10,14 +10,14 @@
     color: rgb(0, 0, 0);
     animation: fadeIn 0.4s ease-in-out;
     z-index: 9999;
-    width: 500px;
+    width: 100%;
 }
 
 .pixHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 100px;
+    gap: 80px;
     margin-top: 50px;
 }
 

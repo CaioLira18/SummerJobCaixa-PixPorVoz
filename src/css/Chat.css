@@ -316,3 +316,91 @@
 .chatConfigBar select:active {
     transform: scale(0.97);
 }
+
+/* ========================= */
+/* OVERLAY DE AUTENTICAÇÃO */
+/* ========================= */
+
+.authOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+/* ========================= */
+/* CAIXA DE AUTENTICAÇÃO */
+/* ========================= */
+
+.authBox {
+    width: 90%;
+    max-width: 360px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    text-align: center;
+    animation: authFadeIn 0.25s ease;
+}
+
+/* ========================= */
+/* TEXTO */
+/* ========================= */
+
+.authBox h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0056b3;
+    margin-bottom: 10px;
+}
+
+.authBox p {
+    font-size: 14px;
+    color: #333;
+    margin: 6px 0;
+}
+
+/* ========================= */
+/* BOTÃO */
+/* ========================= */
+
+.authBox button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: none;
+    background: #0056b3;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.authBox button:hover {
+    background: #004494;
+    transform: translateY(-1px);
+}
+
+.authBox button:active {
+    transform: scale(0.97);
+}
+
+/* ========================= */
+/* ANIMAÇÃO */
+/* ========================= */
+
+@keyframes authFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
