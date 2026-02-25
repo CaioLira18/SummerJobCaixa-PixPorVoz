@@ -15,6 +15,7 @@ import './css/ContactPage.css'
 import './css/PixConfirmado.css'
 import './css/PixConcluido.css'
 import './css/VoiceStartPage.css'
+import './css/Font.css'
 import App from './App'
 import { BrowserRouter } from 'react-router-dom'
 

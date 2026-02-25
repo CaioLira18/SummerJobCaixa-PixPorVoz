@@ -29,7 +29,7 @@ const PixConcluido = () => {
 
         <button 
           className="btnLight"
-          onClick={() => navigate("/chat")}
+          onClick={() => navigate("/start")}
         >
           Novo Pix por voz
         </button>

@@ -339,19 +339,18 @@
 /* NOVO OVERLAY DE AUTENTICAÇÃO (IDENTICO À IMAGEM) */
 /* ========================= */
 
+/* Estilos Base do Overlay */
 .authOverlay {
     position: fixed;
     inset: 0;
-    /* Gradiente azul conforme a imagem */
     background: linear-gradient(180deg, #1068ab 0%, #064d8a 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    padding-top: 80px;
+    justify-content: space-between; /* Espaça o conteúdo do botão de debug */
+    padding: 60px 20px 40px;
     z-index: 9999;
     color: white;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 .authContent {
@@ -359,37 +358,97 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 400px;
     text-align: center;
 }
 
-.authTitle {
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 25px;
-    letter-spacing: 0.5px;
-}
-
-.authSubtitle {
-    font-size: 18px;
-    line-height: 1.4;
-    max-width: 280px;
-    opacity: 0.9;
-    margin-bottom: 40px;
-}
-
+/* Links de Troca de Método */
 .authMethodsLinks {
     display: flex;
-    gap: 15px;
-    font-size: 13px;
-    font-weight: 700;
+    gap: 20px;
+    margin-top: 30px;
+    font-size: 12px;
+    font-weight: bold;
     text-transform: uppercase;
-    opacity: 0.6;
-    margin-bottom: 100px; /* Espaço até o ícone central */
+    opacity: 0.8;
 }
 
-.authMethodsLinks .separator {
-    font-weight: 300;
+/* --- TELA DE SENHA (Numpad) --- */
+.numpadContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 85px);
+    gap: 15px;
+    margin-top: 40px;
+}
+
+.numpadBtn {
+    width: 85px;
+    height: 85px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pinDisplay {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.pinDot {
+    width: 12px;
+    height: 12px;
+    border: 2px solid white;
+    border-radius: 50%;
+}
+
+.pinDot.filled {
+    background: white;
+}
+
+/* --- TELA FACIAL (Scanner) --- */
+.facialScannerBox {
+    width: 220px;
+    height: 220px;
+    border: 4px solid #00c3ff;
+    border-radius: 45px;
+    position: relative;
+    margin-top: 60px;
+    overflow: hidden;
+}
+
+.scannerLine {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: #00c3ff;
+    box-shadow: 0 0 15px #00c3ff;
+    top: 50%;
+    animation: scanMove 2s infinite ease-in-out;
+}
+
+@keyframes scanMove {
+    0%, 100% { top: 10%; }
+    50% { top: 90%; }
+}
+
+/* Botão Debug Inferior (Igual à imagem) */
+.debugSkipButton {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.5);
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
 }
 
 /* Card da Digital */
