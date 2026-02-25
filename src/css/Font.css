@@ -1,0 +1,55 @@
+/* Regular */
+@font-face {
+    font-family: 'CAIXA Std';
+    src: url('font/CAIXAStd-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Italic */
+@font-face {
+    font-family: 'CAIXA Std';
+    src: url('font/CAIXAStd-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Book (Geralmente usado como um peso intermediário entre Light e Regular) */
+@font-face {
+    font-family: 'CAIXA Std';
+    src: url('font/CAIXAStd-Book.ttf') format('truetype');
+    font-weight: 450;
+    font-style: normal;
+}
+
+/* Light */
+@font-face {
+    font-family: 'CAIXA Std';
+    src: url('font/CAIXAStd-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+/* Bold */
+@font-face {
+    font-family: 'CAIXA Std';
+    src: url('font/CAIXAStd-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+/* SemiBold */
+@font-face {
+    font-family: 'CAIXA Std';
+    src: url('font/CAIXAStd-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+/* ExtraBold */
+@font-face {
+    font-family: 'CAIXA Std';
+    src: url('font/CAIXAStd-ExtraBold.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
