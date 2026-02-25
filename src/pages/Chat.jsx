@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 export const Chat = () => {
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
     const [authMethod, setAuthMethod] = useState("biometria");
     const [voiceSpeed, setVoiceSpeed] = useState(1.0);
+
     const [awaitingAuth, setAwaitingAuth] = useState(false);
     const [pendingPix, setPendingPix] = useState(null);
-
-    const location = useLocation();
-    const chatEndRef = useRef(null);
     const [listFavorites, setListFavorites] = useState([]);
+
+    const chatEndRef = useRef(null);
+    const navigate = useNavigate();
 
     const scrollToBottom = () => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -19,44 +20,45 @@ export const Chat = () => {
 
     useEffect(scrollToBottom, [messages, loading]);
 
-    const falarTexto = (texto) => {
-        const utterance = new SpeechSynthesisUtterance(texto);
-        utterance.lang = "pt-BR";
-        utterance.rate = voiceSpeed;
-        window.speechSynthesis.speak(utterance);
-    };
-
     const adicionarMensagem = (texto, remetente) => {
         setMessages(prev => [...prev, {
             text: texto,
             sender: remetente,
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }]);
-
-        if (remetente === "bot") {
-            falarTexto(texto);
-        }
     };
 
-    // Carregar favoritos
+    const tocarAudioBackend = (audioUrl) => {
+        const audio = new Audio(`http://127.0.0.1:8000${audioUrl}`);
+        audio.playbackRate = voiceSpeed;
+        audio.play();
+    };
+
+    // =========================
+    // CARREGAR FAVORITOS
+    // =========================
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            const parsedUser = JSON.parse(storedUser);
-            if (parsedUser.contactIds?.length > 0) {
-                fetch("http://localhost:8080/api/users/list-by-ids", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(parsedUser.contactIds)
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        setListFavorites(data.map(u => u.name));
-                    });
-            }
+        if (!storedUser) return;
+
+        const parsedUser = JSON.parse(storedUser);
+
+        if (parsedUser.contactIds?.length > 0) {
+            fetch("http://localhost:8080/api/users/list-by-ids", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(parsedUser.contactIds)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    setListFavorites(data.map(u => u.name));
+                });
         }
     }, []);
 
+    // =========================
+    // VOZ
+    // =========================
     const iniciarVoz = () => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = new SpeechRecognition();
@@ -64,6 +66,7 @@ export const Chat = () => {
 
         recognition.onresult = async (event) => {
             const transcricao = event.results[0][0].transcript;
+
             adicionarMensagem(transcricao, "user");
             setLoading(true);
 
@@ -79,27 +82,25 @@ export const Chat = () => {
                 });
 
                 const data = await res.json();
+
                 adicionarMensagem(data.resposta, "bot");
 
-                // Controle de estados vindos do backend
-                if (data.status === "CONFIRMATION_REQUIRED") {
+                if (data.audio_url) {
+                    tocarAudioBackend(data.audio_url);
+                }
+
+                // 🔐 EXEMPLO DE STATUS ESPERADO DO BACKEND
+                if (data.status === "REQUIRE_AUTH") {
                     setPendingPix({
                         valor: data.valor,
                         destinatario: data.destinatario
                     });
-                }
-
-                if (data.status === "AUTH_REQUIRED") {
                     setAwaitingAuth(true);
-                }
-
-                if (data.status === "COMPLETED") {
-                    setAwaitingAuth(false);
-                    setPendingPix(null);
                 }
 
             } catch (err) {
                 console.error("Erro IA", err);
+                adicionarMensagem("Erro ao processar comando.", "bot");
             } finally {
                 setLoading(false);
             }
@@ -108,20 +109,28 @@ export const Chat = () => {
         recognition.start();
     };
 
+    // =========================
+    // AUTENTICAÇÃO
+    // =========================
     const autenticar = () => {
         adicionarMensagem(`Autenticando via ${authMethod}...`, "bot");
 
         setTimeout(() => {
-            adicionarMensagem("Pix realizado com sucesso ✅", "bot");
             setAwaitingAuth(false);
-            setPendingPix(null);
+
+            navigate("/pixConfirmado");
+
+            setTimeout(() => {
+                navigate("/pixConcluido");
+            }, 1500);
+
         }, 2000);
     };
 
     return (
         <div>
 
-            {/* CONFIGURAÇÃO DENTRO DO CHAT */}
+            {/* CONFIG */}
             <div className="chatConfigBar">
                 <select value={authMethod} onChange={(e) => setAuthMethod(e.target.value)}>
                     <option value="biometria">Biometria</option>
@@ -142,14 +151,20 @@ export const Chat = () => {
                     <div key={index} className={`containerBox ${msg.sender === 'user' ? 'userAlign' : 'botAlign'}`}>
                         <div className="messageBox">
                             {msg.sender === 'user' && (
-                                <div className="userProfile"><i className="fa-solid fa-user"></i></div>
+                                <div className="userProfile">
+                                    <i className="fa-solid fa-user"></i>
+                                </div>
                             )}
+
                             <div className="messageContent">
                                 <div className="messageText">{msg.text}</div>
                                 <div className="messageTime">{msg.time}</div>
                             </div>
+
                             {msg.sender === 'bot' && (
-                                <div className="userProfile"><i className="fa-solid fa-robot"></i></div>
+                                <div className="userProfile">
+                                    <i className="fa-solid fa-robot"></i>
+                                </div>
                             )}
                         </div>
                     </div>
@@ -166,15 +181,33 @@ export const Chat = () => {
                 <div ref={chatEndRef} />
             </div>
 
-            {/* AUTENTICAÇÃO */}
+            {/* 🔐 AUTENTICAÇÃO ESTILO BANCO */}
             {awaitingAuth && (
-                <div className="authBox">
-                    <h3>Autenticação necessária</h3>
-                    <p>Valor: R$ {pendingPix?.valor}</p>
-                    <p>Destinatário: {pendingPix?.destinatario}</p>
-                    <button onClick={autenticar}>
-                        Autenticar via {authMethod}
-                    </button>
+                <div className="authOverlay">
+                    <div className="authContent">
+                        <h2 className="authTitle">Confirmar Transferência</h2>
+                        <p className="authSubtitle">
+                            Confirme com a impressão digital para realizar a transferência
+                        </p>
+
+                        <div className="authMethodsLinks">
+                            <span>TROCAR MÉTODO</span>
+                            <span className="separator">|</span>
+                            <span>USAR SENHA</span>
+                        </div>
+
+                        <div className="biometryCard" onClick={autenticar}>
+                            <div className="fingerprintIcon">
+                                <i className="fa-solid fa-fingerprint"></i>
+                            </div>
+                        </div>
+
+                        <p className="authFooterText">TOQUE PARA CONFIRMAR</p>
+
+                        <button className="debugSkipButton" onClick={autenticar}>
+                            <i className="fa-solid fa-bug"></i> PULAR AUTENTICAÇÃO (DEBUG)
+                        </button>
+                    </div>
                 </div>
             )}
 

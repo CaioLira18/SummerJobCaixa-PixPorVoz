@@ -1,0 +1,100 @@
+.pixRealizadoContainer {
+    position: fixed;
+    inset: 0;
+    background: #4cd964;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    color: rgb(0, 0, 0);
+    animation: fadeIn 0.4s ease-in-out;
+    z-index: 9999;
+    width: 100%;
+}
+
+.pixHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 80px;
+    margin-top: 50px;
+}
+
+.pixTitle {
+    text-align: center;
+}
+
+.pixTitle small {
+    font-size: 11px;
+    opacity: 0.7;
+}
+
+.iconBtn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: rgb(115, 183, 127);
+    border-radius: 90px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+}
+
+.pixCheckArea {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 500px;
+}
+
+.checkCircle {
+    width: 140px;
+    height: 140px;
+    background: #173b10;
+    border-radius: 50%;
+    border: 10px solid white;
+    color: white;
+    font-size: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.pixHint {
+    font-size: 12px;
+    opacity: 0.6;
+}
+
+.pixButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 100px;
+}
+
+.btnDark {
+    background: #173b10;
+    color: white;
+    width: 400px;
+    height: 80px;
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+}
+
+.btnLight {
+    background: white;
+    color: #173b10;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+}

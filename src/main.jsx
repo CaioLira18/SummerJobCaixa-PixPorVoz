@@ -12,6 +12,8 @@ import './css/Footer.css'
 import './css/TransacaoPage.css'
 import './css/Login.css'
 import './css/ContactPage.css'
+import './css/PixConfirmado.css'
+import './css/PixConcluido.css'
 import App from './App'
 import { BrowserRouter } from 'react-router-dom'
 
