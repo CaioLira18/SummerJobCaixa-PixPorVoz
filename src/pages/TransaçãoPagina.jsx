@@ -53,7 +53,7 @@ export const TransaçãoPagina = () => {
           </button>
         </div>
 
-        <Link to={'/chat'}>
+        <Link to={'/start'}>
           <button className="pix-por-voz">
             <div className="voz-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">

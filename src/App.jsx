@@ -11,6 +11,7 @@ import AuthPage from './pages/AuthPage'
 import { ContactPage } from './pages/ContactPage'
 import PixConfirmado from './pages/PixConfirmado'
 import PixConcluido from './pages/PixConcluido'
+import { VoiceStartPage } from './pages/VoiceStartPage'
 function App() {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -21,6 +22,7 @@ function App() {
           <Route path="/" element={<Home isVisible={isVisible} />} />
           <Route path="/terminal" element={<Terminal />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/start" element={<VoiceStartPage />} />
           <Route path="/loading" element={<LoadingPage />} />
           <Route path="/areaPix" element={<TransaçãoPagina />} />
           <Route path="/contacts" element={<ContactPage />} />
