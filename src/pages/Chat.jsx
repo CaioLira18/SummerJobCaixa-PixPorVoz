@@ -277,23 +277,69 @@ export const Chat = () => {
                 <div ref={chatEndRef} />
             </div>
 
-            {/* AUTENTICAÇÃO */}
+            {/* AUTENTICAÇÃO DINÂMICA */}
             {awaitingAuth && (
                 <div className="authOverlay">
                     <div className="authContent">
                         <h2 className="authTitle">Confirmar Transferência</h2>
                         <p className="authSubtitle">
-                            Confirme com a impressão digital para realizar a transferência
+                            {authMethod === "biometria" && "Confirme com a impressão digital para realizar a transferência"}
+                            {authMethod === "facial" && "Autenticando..."}
+                            {authMethod === "senha" && "Confirme com sua senha para realizar a transferência"}
                         </p>
 
-                        <div className="biometryCard" onClick={autenticar}>
-                            <div className="fingerprintIcon">
-                                <i className="fa-solid fa-fingerprint"></i>
+                        {/* Links de troca (Apenas biometria e facial costumam ter) */}
+                        {authMethod !== "senha" && (
+                            <div className="authMethodsLinks">
+                                <span onClick={() => setAuthMethod("facial")}>TROCAR MÉTODO</span>
+                                <span style={{ opacity: 0.3 }}>|</span>
+                                <span onClick={() => setAuthMethod("senha")}>USAR SENHA</span>
                             </div>
-                        </div>
+                        )}
 
-                        <p className="authFooterText">TOQUE PARA CONFIRMAR</p>
+                        {/* RENDERIZAÇÃO CONDICIONAL POR MÉTODO */}
+
+                        {/* 1. DIGITAL (image_f77cd1) */}
+                        {authMethod === "biometria" && (
+                            <>
+                                <div className="biometryCard" style={{ marginTop: '150px' }} onClick={autenticar}>
+                                    <div className="fingerprintIcon">
+                                        <i className="fa-solid fa-fingerprint"></i>
+                                    </div>
+                                </div>
+                                <p className="authFooterText" style={{ marginTop: '20px' }}>TOQUE PARA CONFIRMAR</p>
+                            </>
+                        )}
+
+                        {/* 2. FACIAL (image_f77c76) */}
+                        {authMethod === "facial" && (
+                            <div className="facialScannerBox" onClick={autenticar}>
+                                <div className="scannerLine"></div>
+                            </div>
+                        )}
+
+                        {/* 3. SENHA (image_f77c1f) */}
+                        {authMethod === "senha" && (
+                            <>
+                                <div className="pinDisplay">
+                                    {[1, 2, 3, 4, 5, 6].map(i => <div key={i} className="pinDot"></div>)}
+                                </div>
+                                <div className="numpadContainer">
+                                    {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
+                                        <button key={num} className="numpadBtn" onClick={autenticar}>{num}</button>
+                                    ))}
+                                    <div></div>
+                                    <button className="numpadBtn" onClick={autenticar}>0</button>
+                                    <button className="numpadBtn"><i className="fa-solid fa-delete-left"></i></button>
+                                </div>
+                            </>
+                        )}
                     </div>
+
+                    {/* Botão de Debug Fixo no Rodapé */}
+                    <button className="debugSkipButton" onClick={autenticar}>
+                        <i className="fa-solid fa-bug"></i> PULAR AUTENTICAÇÃO (DEBUG)
+                    </button>
                 </div>
             )}
 

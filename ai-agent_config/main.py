@@ -74,7 +74,7 @@ def gerar_conversa_ia(texto_usuario, contatos_validos):
 
     # 3. Retorno com Status de Autenticação para o React
     return {
-        "texto": f"Certo! Identifiquei um Pix de R$ {valor_extraido} para {contato_mencionado}. Por favor, confirme com sua biometria.",
+        "texto": f"Certo! Identifiquei um Pix de R$ {valor_extraido} para {contato_mencionado}. Por favor, confirme com seu metodo de autenticação.",
         "status": "REQUIRE_AUTH",
         "valor": valor_extraido,
         "destinatario": contato_mencionado
