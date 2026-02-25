@@ -181,16 +181,31 @@ export const Chat = () => {
                 <div ref={chatEndRef} />
             </div>
 
-            {/* 🔐 AUTENTICAÇÃO */}
+            {/* 🔐 AUTENTICAÇÃO ESTILO BANCO */}
             {awaitingAuth && (
                 <div className="authOverlay">
-                    <div className="authBox">
-                        <h3>Autenticação necessária</h3>
-                        <p><strong>Valor:</strong> R$ {pendingPix?.valor}</p>
-                        <p><strong>Destinatário:</strong> {pendingPix?.destinatario}</p>
+                    <div className="authContent">
+                        <h2 className="authTitle">Confirmar Transferência</h2>
+                        <p className="authSubtitle">
+                            Confirme com a impressão digital para realizar a transferência
+                        </p>
 
-                        <button onClick={autenticar}>
-                            Autenticar via {authMethod}
+                        <div className="authMethodsLinks">
+                            <span>TROCAR MÉTODO</span>
+                            <span className="separator">|</span>
+                            <span>USAR SENHA</span>
+                        </div>
+
+                        <div className="biometryCard" onClick={autenticar}>
+                            <div className="fingerprintIcon">
+                                <i className="fa-solid fa-fingerprint"></i>
+                            </div>
+                        </div>
+
+                        <p className="authFooterText">TOQUE PARA CONFIRMAR</p>
+
+                        <button className="debugSkipButton" onClick={autenticar}>
+                            <i className="fa-solid fa-bug"></i> PULAR AUTENTICAÇÃO (DEBUG)
                         </button>
                     </div>
                 </div>

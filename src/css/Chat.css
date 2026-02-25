@@ -335,72 +335,115 @@
 /* CAIXA DE AUTENTICAÇÃO */
 /* ========================= */
 
-.authBox {
-    width: 90%;
-    max-width: 360px;
-    background: #ffffff;
-    border-radius: 20px;
-    padding: 24px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-    text-align: center;
-    animation: authFadeIn 0.25s ease;
+/* ========================= */
+/* NOVO OVERLAY DE AUTENTICAÇÃO (IDENTICO À IMAGEM) */
+/* ========================= */
+
+.authOverlay {
+    position: fixed;
+    inset: 0;
+    /* Gradiente azul conforme a imagem */
+    background: linear-gradient(180deg, #1068ab 0%, #064d8a 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 80px;
+    z-index: 9999;
+    color: white;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* ========================= */
-/* TEXTO */
-/* ========================= */
-
-.authBox h3 {
-    font-size: 18px;
-    font-weight: 700;
-    color: #0056b3;
-    margin-bottom: 10px;
-}
-
-.authBox p {
-    font-size: 14px;
-    color: #333;
-    margin: 6px 0;
-}
-
-/* ========================= */
-/* BOTÃO */
-/* ========================= */
-
-.authBox button {
-    margin-top: 20px;
+.authContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
-    padding: 14px;
-    border-radius: 14px;
-    border: none;
-    background: #0056b3;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 600;
+    max-width: 400px;
+    text-align: center;
+}
+
+.authTitle {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    letter-spacing: 0.5px;
+}
+
+.authSubtitle {
+    font-size: 18px;
+    line-height: 1.4;
+    max-width: 280px;
+    opacity: 0.9;
+    margin-bottom: 40px;
+}
+
+.authMethodsLinks {
+    display: flex;
+    gap: 15px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 100px; /* Espaço até o ícone central */
+}
+
+.authMethodsLinks .separator {
+    font-weight: 300;
+}
+
+/* Card da Digital */
+.biometryCard {
+    width: 140px;
+    height: 160px;
+    background: rgba(255, 255, 255, 0.12); /* Efeito glassmorphism */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: transform 0.2s ease;
+    margin-bottom: 20px;
 }
 
-.authBox button:hover {
-    background: #004494;
-    transform: translateY(-1px);
+.biometryCard:active {
+    transform: scale(0.95);
+    background: rgba(255, 255, 255, 0.2);
 }
 
-.authBox button:active {
-    transform: scale(0.97);
+.fingerprintIcon {
+    font-size: 60px;
+    color: white;
 }
 
-/* ========================= */
-/* ANIMAÇÃO */
-/* ========================= */
+.authFooterText {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    opacity: 0.5;
+    text-transform: uppercase;
+}
 
-@keyframes authFadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+/* Botão de Debug Inferior */
+.debugSkipButton {
+    position: absolute;
+    bottom: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.6);
+    padding: 10px 25px;
+    border-radius: 30px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.debugSkipButton:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
 }

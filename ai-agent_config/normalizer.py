@@ -1,18 +1,15 @@
 import re
 import unicodedata
 
-# Normalização base
 def normalizar_texto(texto: str) -> str:
     if not texto:
         return ""
 
     texto = texto.lower().strip()
 
-    # Remove acentos
     texto = unicodedata.normalize("NFKD", texto)
     texto = "".join(c for c in texto if not unicodedata.combining(c))
 
-    # Normalizações comuns de fala
     substituicoes = {
         "pra ": "para ",
         "pro ": "para o ",
@@ -30,9 +27,7 @@ def normalizar_texto(texto: str) -> str:
     for errado, certo in substituicoes.items():
         texto = texto.replace(errado, certo)
 
-    # Remove ruído comum
     texto = re.sub(r"\b(eh|ah|hum|hmm|tipo|entao)\b", "", texto)
 
-    # Remove múltiplos espaços
     texto = re.sub(r"\s+", " ", texto).strip()
     return texto
