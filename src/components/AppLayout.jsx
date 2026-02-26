@@ -5,7 +5,6 @@ import { Footer } from './Footer'
 export const AppLayout = ({ isVisible, setIsVisible }) => {
   return (
     <div className="app-layout">
-      <Header isVisible={isVisible} setIsVisible={setIsVisible} />
       <Outlet context={[isVisible]} /> 
       <Footer />
     </div>

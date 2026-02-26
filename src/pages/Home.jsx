@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Amount } from '../components/Amount'
 import { Link, useNavigate } from 'react-router-dom'
+import { Header } from '../components/Header';
 
-export const Home = ({ isVisible }) => {
+export const Home = ({setIsVisible, isVisible }) => {
 
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado para controlar se o usuário está autenticado ou não
   const [isAdmin, setIsAdmin] = useState(false); // Estado para controlar se o usuário é admin ou não (pode ser usado para mostrar opções adicionais no futuro)
@@ -34,7 +35,10 @@ export const Home = ({ isVisible }) => {
 
 
   return (
+    
     <div className="homeContainer">
+      <Header isVisible={isVisible} setIsVisible={setIsVisible} />
+
       <div className="homeBox">
         <div className="homeAmountContainer">
           <Amount isVisible={isVisible} /> {/* Componente para exibir o saldo do usuário, recebe a prop isVisible para controlar a visibilidade do valor */}

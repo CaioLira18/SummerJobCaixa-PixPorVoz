@@ -8,10 +8,11 @@ export const VoiceStartPage = () => {
   const [voiceSpeed, setVoiceSpeed] = useState("normal");
   const [listening, setListening] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [debugStatus, setDebugStatus] = useState(null); // null | 'sucesso'
+  const [debugStatus, setDebugStatus] = useState(null);
 
   const recognitionRef = useRef(null);
 
+  // ✅ Cria o reconhecimento apenas UMA vez
   useEffect(() => {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -25,24 +26,48 @@ export const VoiceStartPage = () => {
 
     recognition.onresult = (event) => {
       const text = event.results[0][0].transcript;
+
+      recognition.stop(); // 🔥 garante que pare antes de navegar
+      setListening(false);
+
       navigate("/chat", {
-        state: { firstMessage: text, authMethod, voiceSpeed },
+        state: {
+          firstMessage: text,
+          authMethod,
+          voiceSpeed,
+        },
       });
     };
 
-    recognition.onend = () => setListening(false);
+    recognition.onend = () => {
+      setListening(false);
+    };
+
+    recognition.onerror = () => {
+      setListening(false);
+    };
 
     recognitionRef.current = recognition;
-    return () => recognition.stop();
-  }, [authMethod, voiceSpeed, navigate]);
+
+    return () => {
+      recognition.stop();
+    };
+  }, [navigate, authMethod, voiceSpeed]);
 
   const startListening = () => {
     if (!recognitionRef.current) {
       alert("Reconhecimento de voz não suportado.");
       return;
     }
-    setListening(true);
-    recognitionRef.current.start();
+
+    if (listening) return; // 🔥 evita múltiplos starts
+
+    try {
+      setListening(true);
+      recognitionRef.current.start();
+    } catch {
+      setListening(false);
+    }
   };
 
   const simulateSuccess = () => {
@@ -54,14 +79,31 @@ export const VoiceStartPage = () => {
     <div className="voiceStartContainer">
       {/* Header */}
       <div className="header">
-        <button className="iconBtn closeBtn" onClick={() => navigate(-1)}>✕</button>
+        <button
+          className="iconBtn closeBtn"
+          onClick={() => navigate(-1)}
+        >
+          ✕
+        </button>
+
         <div className="headerCenter">
           <span className="headerLabel">CAIXA ASSISTENTE</span>
           <span className="headerTitle">Modo Voz Ativo</span>
-          {debugStatus && <span className="debugLine">DEBUG: SUCESSO</span>}
-          {debugStatus && <span className="debugLine">DEBUG: AUTH</span>}
+
+          {debugStatus && (
+            <>
+              <span className="debugLine">DEBUG: SUCESSO</span>
+              <span className="debugLine">DEBUG: AUTH</span>
+            </>
+          )}
         </div>
-        <button className="iconBtn settingsBtn" onClick={() => setSettingsOpen(true)}>⚙</button>
+
+        <button
+          className="iconBtn settingsBtn"
+          onClick={() => setSettingsOpen(true)}
+        >
+          ⚙
+        </button>
       </div>
 
       {/* Mic area */}
@@ -93,14 +135,26 @@ export const VoiceStartPage = () => {
 
       {/* Settings overlay */}
       {settingsOpen && (
-        <div className="overlay" onClick={() => setSettingsOpen(false)}>
-          <div className="settingsPanel" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="overlay"
+          onClick={() => setSettingsOpen(false)}
+        >
+          <div
+            className="settingsPanel"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="settingsHeader">
               <span className="settingsTitle">CONFIGURAÇÕES</span>
-              <button className="iconBtn" onClick={() => setSettingsOpen(false)}>✕</button>
+              <button
+                className="iconBtn"
+                onClick={() => setSettingsOpen(false)}
+              >
+                ✕
+              </button>
             </div>
 
             <p className="sectionLabel">SEGURANÇA PADRÃO</p>
+
             <div className="settingsList">
               {[
                 { id: "biometria", label: "Biometria" },
@@ -109,16 +163,21 @@ export const VoiceStartPage = () => {
               ].map((opt) => (
                 <button
                   key={opt.id}
-                  className={`settingsOption ${authMethod === opt.id ? "activeOption" : ""}`}
+                  className={`settingsOption ${
+                    authMethod === opt.id ? "activeOption" : ""
+                  }`}
                   onClick={() => setAuthMethod(opt.id)}
                 >
                   <span>{opt.label}</span>
-                  {authMethod === opt.id && <span className="checkmark">✓</span>}
+                  {authMethod === opt.id && (
+                    <span className="checkmark">✓</span>
+                  )}
                 </button>
               ))}
             </div>
 
             <p className="sectionLabel">VELOCIDADE DA VOZ</p>
+
             <div className="speedOptions">
               {[
                 { id: "slow", label: "Lenta" },
@@ -127,7 +186,9 @@ export const VoiceStartPage = () => {
               ].map((opt) => (
                 <button
                   key={opt.id}
-                  className={`speedBtn ${voiceSpeed === opt.id ? "activeSpeed" : ""}`}
+                  className={`speedBtn ${
+                    voiceSpeed === opt.id ? "activeSpeed" : ""
+                  }`}
                   onClick={() => setVoiceSpeed(opt.id)}
                 >
                   {opt.label}
@@ -135,7 +196,10 @@ export const VoiceStartPage = () => {
               ))}
             </div>
 
-            <button className="simulateBtn" onClick={simulateSuccess}>
+            <button
+              className="simulateBtn"
+              onClick={simulateSuccess}
+            >
               ✏ SIMULAR SUCESSO (TESTE)
             </button>
           </div>

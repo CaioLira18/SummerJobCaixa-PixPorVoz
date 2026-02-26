@@ -8,6 +8,7 @@ export const Chat = () => {
     const [voiceSpeed, setVoiceSpeed] = useState(1.0);
 
     const [awaitingAuth, setAwaitingAuth] = useState(false);
+    const [awaitingConfirm, setAwaitingConfirm] = useState(false);
     const [pendingPix, setPendingPix] = useState(null);
     const [listFavorites, setListFavorites] = useState([]);
 
@@ -15,19 +16,14 @@ export const Chat = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // Refs para evitar stale closures e double-invoke do StrictMode
     const firstMessageSent = useRef(false);
     const voiceSpeedRef = useRef(voiceSpeed);
-    const listFavoritesRef = useRef([]); // sempre atualizado junto com o state
+    const listFavoritesRef = useRef([]);
+    const awaitingConfirmRef = useRef(false); // ref para evitar stale closure no onresult
 
-    useEffect(() => {
-        voiceSpeedRef.current = voiceSpeed;
-    }, [voiceSpeed]);
-
-    // Mantém a ref sincronizada com o state
-    useEffect(() => {
-        listFavoritesRef.current = listFavorites;
-    }, [listFavorites]);
+    useEffect(() => { voiceSpeedRef.current = voiceSpeed; }, [voiceSpeed]);
+    useEffect(() => { listFavoritesRef.current = listFavorites; }, [listFavorites]);
+    useEffect(() => { awaitingConfirmRef.current = awaitingConfirm; }, [awaitingConfirm]);
 
     const scrollToBottom = () => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -43,14 +39,128 @@ export const Chat = () => {
         }]);
     };
 
-    const tocarAudioBackend = (audioUrl) => {
+    // =========================
+    // VOZ — ativa automaticamente após o bot parar de falar
+    // =========================
+    const iniciarEscuta = () => {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) return;
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = "pt-BR";
+        recognition.interimResults = false;
+
+        recognition.onresult = (event) => {
+            const transcricao = event.results[0][0].transcript.trim().toLowerCase();
+
+            // Se estiver aguardando confirmação, interpreta sim/não
+            if (awaitingConfirmRef.current) {
+                const positivo = ["sim", "confirmar", "confirma", "pode", "vai", "isso", "correto", "certo", "ok", "yes"];
+                const negativo = ["não", "nao", "cancela", "cancelar", "errado", "errada", "volta", "no"];
+
+                const ehSim = positivo.some(p => transcricao.includes(p));
+                const ehNao = negativo.some(n => transcricao.includes(n));
+
+                if (ehSim) {
+                    confirmarPix(transcricao);
+                } else if (ehNao) {
+                    cancelarPix(transcricao);
+                } else {
+                    // Não entendeu — pede para repetir e volta a escutar
+                    adicionarMensagem(transcricao, "user");
+                    const msgDuvida = "Não entendi. Diga 'sim' para confirmar ou 'não' para cancelar.";
+                    adicionarMensagem(msgDuvida, "bot");
+                    tocarAudioTexto(msgDuvida);
+                }
+            } else {
+                // Fluxo normal de comando Pix
+                processarMensagem(transcricao);
+            }
+        };
+
+        recognition.onerror = (e) => {
+            console.warn("Erro no reconhecimento de voz:", e.error);
+        };
+
+        recognition.start();
+    };
+
+    // Toca áudio do backend e, ao terminar, ativa o microfone automaticamente
+    const tocarAudioBackend = (audioUrl, onEndCallback) => {
         const audio = new Audio(`http://127.0.0.1:8000${audioUrl}`);
         audio.playbackRate = voiceSpeedRef.current;
+        audio.onended = () => {
+            if (onEndCallback) onEndCallback();
+            else iniciarEscuta();
+        };
         audio.play();
     };
 
+    // Síntese de voz local (fallback quando não há áudio do backend)
+    const tocarAudioTexto = (texto, onEndCallback) => {
+        const synth = window.speechSynthesis;
+        if (!synth) {
+            if (onEndCallback) onEndCallback();
+            else iniciarEscuta();
+            return;
+        }
+        const utterance = new SpeechSynthesisUtterance(texto);
+        utterance.lang = "pt-BR";
+        utterance.rate = voiceSpeedRef.current;
+        utterance.onend = () => {
+            if (onEndCallback) onEndCallback();
+            else iniciarEscuta();
+        };
+        synth.speak(utterance);
+    };
+
     // =========================
-    // PROCESSAR MENSAGEM (usa listFavoritesRef para evitar stale closure)
+    // PROCESSAR RESPOSTA DA API
+    // =========================
+    const tratarRespostaApi = (data) => {
+        adicionarMensagem(data.resposta, "bot");
+
+        if (data.status === "CONFIRM") {
+            setPendingPix({ valor: data.valor, destinatario: data.destinatario });
+            setAwaitingConfirm(true);
+            awaitingConfirmRef.current = true;
+        }
+
+        // Toca o áudio — ao terminar ativa microfone automaticamente (exceto durante autenticação)
+        if (data.audio_url) {
+            tocarAudioBackend(data.audio_url);
+        } else {
+            tocarAudioTexto(data.resposta);
+        }
+    };
+
+    // =========================
+    // CONFIRMAÇÃO POR VOZ
+    // =========================
+    const confirmarPix = (transcricao) => {
+        setAwaitingConfirm(false);
+        awaitingConfirmRef.current = false;
+        adicionarMensagem(transcricao, "user");
+        const msgAuth = `Perfeito! Iniciando autenticação via ${authMethod}...`;
+        adicionarMensagem(msgAuth, "bot");
+        tocarAudioTexto(msgAuth, () => {
+            // Após falar, abre autenticação — NÃO volta a escutar
+            setAwaitingAuth(true);
+        });
+    };
+
+    const cancelarPix = (transcricao) => {
+        setAwaitingConfirm(false);
+        awaitingConfirmRef.current = false;
+        setPendingPix(null);
+        adicionarMensagem(transcricao, "user");
+        const msgCancel = "Tudo bem! Cancelei. Pode me dizer o valor e o destinatário novamente.";
+        adicionarMensagem(msgCancel, "bot");
+        tocarAudioTexto(msgCancel); // ao terminar → escuta novo comando
+    };
+
+    // =========================
+    // PROCESSAR MENSAGEM
     // =========================
     const processarMensagem = async (texto) => {
         adicionarMensagem(texto, "user");
@@ -58,10 +168,7 @@ export const Chat = () => {
 
         try {
             let historicoAtual = [];
-            setMessages(prev => {
-                historicoAtual = prev;
-                return prev;
-            });
+            setMessages(prev => { historicoAtual = prev; return prev; });
 
             const res = await fetch("http://127.0.0.1:8000/ouvir", {
                 method: "POST",
@@ -74,35 +181,24 @@ export const Chat = () => {
             });
 
             const data = await res.json();
-
-            adicionarMensagem(data.resposta, "bot");
-
-            if (data.audio_url) tocarAudioBackend(data.audio_url);
-
-            if (data.status === "REQUIRE_AUTH") {
-                setPendingPix({ valor: data.valor, destinatario: data.destinatario });
-                setAwaitingAuth(true);
-            }
+            tratarRespostaApi(data);
 
         } catch (err) {
             console.error("Erro IA", err);
             adicionarMensagem("Erro ao processar comando.", "bot");
+            iniciarEscuta();
         } finally {
             setLoading(false);
         }
     };
 
-    // Versão que recebe favoritos explicitamente (para a primeira mensagem)
     const processarMensagemComFavoritos = async (texto, favoritos) => {
         adicionarMensagem(texto, "user");
         setLoading(true);
 
         try {
             let historicoAtual = [];
-            setMessages(prev => {
-                historicoAtual = prev;
-                return prev;
-            });
+            setMessages(prev => { historicoAtual = prev; return prev; });
 
             const res = await fetch("http://127.0.0.1:8000/ouvir", {
                 method: "POST",
@@ -115,25 +211,17 @@ export const Chat = () => {
             });
 
             const data = await res.json();
-
-            adicionarMensagem(data.resposta, "bot");
-
-            if (data.audio_url) tocarAudioBackend(data.audio_url);
-
-            if (data.status === "REQUIRE_AUTH") {
-                setPendingPix({ valor: data.valor, destinatario: data.destinatario });
-                setAwaitingAuth(true);
-            }
+            tratarRespostaApi(data);
 
         } catch (err) {
             console.error("Erro IA", err);
             adicionarMensagem("Erro ao processar comando.", "bot");
+            iniciarEscuta();
         } finally {
             setLoading(false);
         }
     };
 
-    // Chamado após favoritos estarem prontos
     const dispararPrimeiraMensagem = (favoritos) => {
         if (location.state?.firstMessage && !firstMessageSent.current) {
             firstMessageSent.current = true;
@@ -142,12 +230,10 @@ export const Chat = () => {
     };
 
     // =========================
-    // INICIALIZAÇÃO: carrega favoritos PRIMEIRO, depois dispara a primeira mensagem
+    // INICIALIZAÇÃO
     // =========================
     useEffect(() => {
-        if (location.state?.authMethod) {
-            setAuthMethod(location.state.authMethod);
-        }
+        if (location.state?.authMethod) setAuthMethod(location.state.authMethod);
 
         if (location.state?.voiceSpeed) {
             const speedMap = { slow: 0.8, normal: 1.0, fast: 1.5 };
@@ -174,41 +260,18 @@ export const Chat = () => {
                 .then(res => res.json())
                 .then(data => {
                     const nomes = data.map(u => u.name);
-                    // Atualiza state E ref ao mesmo tempo
                     setListFavorites(nomes);
                     listFavoritesRef.current = nomes;
                     dispararPrimeiraMensagem(nomes);
                 })
                 .catch(err => {
                     console.error("Erro ao carregar favoritos:", err);
-                    dispararPrimeiraMensagem([]); // não trava o chat em caso de erro
+                    dispararPrimeiraMensagem([]);
                 });
         } else {
             dispararPrimeiraMensagem([]);
         }
     }, []);
-
-    // =========================
-    // VOZ
-    // =========================
-    const iniciarVoz = () => {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-        if (!SpeechRecognition) {
-            alert("Reconhecimento de voz não suportado.");
-            return;
-        }
-
-        const recognition = new SpeechRecognition();
-        recognition.lang = "pt-BR";
-
-        recognition.onresult = (event) => {
-            const transcricao = event.results[0][0].transcript;
-            processarMensagem(transcricao);
-        };
-
-        recognition.start();
-    };
 
     // =========================
     // AUTENTICAÇÃO
@@ -223,24 +286,11 @@ export const Chat = () => {
         }, 2000);
     };
 
+    // =========================
+    // RENDER
+    // =========================
     return (
         <div>
-
-            {/* CONFIG */}
-            <div className="chatConfigBar">
-                <select value={authMethod} onChange={(e) => setAuthMethod(e.target.value)}>
-                    <option value="biometria">Biometria</option>
-                    <option value="voz">Voz</option>
-                    <option value="facial">Facial</option>
-                </select>
-
-                <select value={voiceSpeed} onChange={(e) => setVoiceSpeed(parseFloat(e.target.value))}>
-                    <option value={1.0}>Velocidade 1.0x</option>
-                    <option value={1.5}>Velocidade 1.5x</option>
-                    <option value={2.0}>Velocidade 2.0x</option>
-                </select>
-            </div>
-
             {/* CHAT */}
             <div className="containerChat">
                 {messages.map((msg, index) => (
@@ -288,7 +338,6 @@ export const Chat = () => {
                             {authMethod === "senha" && "Confirme com sua senha para realizar a transferência"}
                         </p>
 
-                        {/* Links de troca (Apenas biometria e facial costumam ter) */}
                         {authMethod !== "senha" && (
                             <div className="authMethodsLinks">
                                 <span onClick={() => setAuthMethod("facial")}>TROCAR MÉTODO</span>
@@ -297,9 +346,6 @@ export const Chat = () => {
                             </div>
                         )}
 
-                        {/* RENDERIZAÇÃO CONDICIONAL POR MÉTODO */}
-
-                        {/* 1. DIGITAL (image_f77cd1) */}
                         {authMethod === "biometria" && (
                             <>
                                 <div className="biometryCard" style={{ marginTop: '150px' }} onClick={autenticar}>
@@ -311,14 +357,12 @@ export const Chat = () => {
                             </>
                         )}
 
-                        {/* 2. FACIAL (image_f77c76) */}
                         {authMethod === "facial" && (
                             <div className="facialScannerBox" onClick={autenticar}>
                                 <div className="scannerLine"></div>
                             </div>
                         )}
 
-                        {/* 3. SENHA (image_f77c1f) */}
                         {authMethod === "senha" && (
                             <>
                                 <div className="pinDisplay">
@@ -336,20 +380,11 @@ export const Chat = () => {
                         )}
                     </div>
 
-                    {/* Botão de Debug Fixo no Rodapé */}
                     <button className="debugSkipButton" onClick={autenticar}>
                         <i className="fa-solid fa-bug"></i> PULAR AUTENTICAÇÃO (DEBUG)
                     </button>
                 </div>
             )}
-
-            {/* MICROFONE */}
-            <div className="inputBarContainer">
-                <div className="microphoneButton" onClick={iniciarVoz}>
-                    <i className={`fa-solid ${loading ? 'fa-spinner fa-spin' : 'fa-microphone'}`}></i>
-                </div>
-            </div>
-
         </div>
     );
 };
