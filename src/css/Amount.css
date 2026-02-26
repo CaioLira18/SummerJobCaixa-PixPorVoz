@@ -1,0 +1,93 @@
+.amountContainer {
+    width: 100%;
+    border: none;
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.amount {
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.amount span {
+    color: rgb(70, 70, 70);
+    font-size: 10px;
+    /* Mantido */
+}
+
+.amount h4 {
+    font-size: 25px;
+    /* Mantido */
+    color:#005a96;
+    margin: 5px 0;
+    /* Pequeno ajuste de respiro */
+}
+
+.amountBox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 15px;
+}
+
+.iconAngle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #005a96;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    color: #005a96;
+}
+
+.openFinance {
+    font-size: 10px;
+    /* Mantido */
+    padding: 12px 10px;
+    text-align: start;
+    border-top: 1px solid #ddd;
+    /* Linha divisória fina da foto */
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    color: rgb(129, 129, 129);
+}
+
+.homeIcon {
+    background-color: red;
+    padding: 5px;
+    border-radius: 20px;
+    width: 10px;
+    height: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.openFinance i {
+    color: white;
+}
+
+.openFinance span {
+    margin-left: 8px;
+}
+
+.angle {
+    display: flex;
+    align-items: end;
+    justify-content: end;
+    margin: 0 auto;
+    padding-left: 150px;
+}
+
+.angle i {
+    color: #6274a9;
+}
+

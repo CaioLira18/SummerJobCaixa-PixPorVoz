@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "Caixa",
+    "slug": "pix-por-voz",
+    "version": "1.0.0",
+    "extra": {
+      "eas": {
+        "projectId": "1e16c388-3118-48ab-98a9-ef5c45d40188"
+      }
+    },
+    "owner": "caixa-project"
+  }
+}

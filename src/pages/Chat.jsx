@@ -125,11 +125,32 @@ export const Chat = () => {
     // =========================
     // FLUXOS DE CONFIRMAÇÃO
     // =========================
+    const generateTransactionId = () => {
+        // 16-character hexadecimal
+        return Array.from({ length: 16 }, () => Math.floor(Math.random() * 16).toString(16)).join('').toUpperCase();
+    };
+
+    const generateAuthCode = () => {
+        // 8-character alphanumeric
+        return Array.from({ length: 8 }, () => Math.random().toString(36)[2].toUpperCase()).join('');
+    };
+
     const confirmarPix = (transcricao) => {
         setAwaitingConfirm(false);
         awaitingConfirmRef.current = false;
         adicionarMensagem(transcricao, "user");
         
+        // enrich pendingPix with additional meta
+        const now = new Date();
+        setPendingPix(prev => ({
+            ...prev,
+            date: now.toISOString(),
+            cpf: "***.123.456-**",
+            instituicao: "Banco X",
+            transactionId: `E${generateTransactionId()}`,
+            authCode: generateAuthCode(),
+        }));
+
         const msgAuth = `Perfeito! Iniciando autenticação via ${authMethod}...`;
         adicionarMensagem(msgAuth, "bot");
 
@@ -255,8 +276,9 @@ export const Chat = () => {
 
         setTimeout(() => {
             setAwaitingAuth(false);
-            navigate("/pixConfirmado");
-            setTimeout(() => navigate("/pixConcluido"), 1500);
+            // primeiro exibimos a tela de confirmação e repassamos dados da transação
+            navigate("/pixConfirmado", { state: pendingPix });
+            // a própria PixConfirmado se encarrega de avançar para o comprovante
         }, 2000);
     };
 
