@@ -19,7 +19,7 @@ export const Chat = () => {
     const firstMessageSent = useRef(false);
     const voiceSpeedRef = useRef(voiceSpeed);
     const listFavoritesRef = useRef([]);
-    const awaitingConfirmRef = useRef(false); // ref para evitar stale closure no onresult
+    const awaitingConfirmRef = useRef(false);
 
     useEffect(() => { voiceSpeedRef.current = voiceSpeed; }, [voiceSpeed]);
     useEffect(() => { listFavoritesRef.current = listFavorites; }, [listFavorites]);
@@ -40,7 +40,7 @@ export const Chat = () => {
     };
 
     // =========================
-    // VOZ — ativa automaticamente após o bot parar de falar
+    // VOZ — RECONHECIMENTO
     // =========================
     const iniciarEscuta = () => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -53,7 +53,6 @@ export const Chat = () => {
         recognition.onresult = (event) => {
             const transcricao = event.results[0][0].transcript.trim().toLowerCase();
 
-            // Se estiver aguardando confirmação, interpreta sim/não
             if (awaitingConfirmRef.current) {
                 const positivo = ["sim", "confirmar", "confirma", "pode", "vai", "isso", "correto", "certo", "ok", "yes"];
                 const negativo = ["não", "nao", "cancela", "cancelar", "errado", "errada", "volta", "no"];
@@ -66,14 +65,13 @@ export const Chat = () => {
                 } else if (ehNao) {
                     cancelarPix(transcricao);
                 } else {
-                    // Não entendeu — pede para repetir e volta a escutar
                     adicionarMensagem(transcricao, "user");
                     const msgDuvida = "Não entendi. Diga 'sim' para confirmar ou 'não' para cancelar.";
                     adicionarMensagem(msgDuvida, "bot");
-                    tocarAudioTexto(msgDuvida);
+                    // Sem voz do navegador aqui, apenas volta a ouvir
+                    setTimeout(iniciarEscuta, 1500);
                 }
             } else {
-                // Fluxo normal de comando Pix
                 processarMensagem(transcricao);
             }
         };
@@ -85,7 +83,9 @@ export const Chat = () => {
         recognition.start();
     };
 
-    // Toca áudio do backend e, ao terminar, ativa o microfone automaticamente
+    // =========================
+    // VOZ — SAÍDA (ELEVENLABS APENAS)
+    // =========================
     const tocarAudioBackend = (audioUrl, onEndCallback) => {
         const audio = new Audio(`http://127.0.0.1:8000${audioUrl}`);
         audio.playbackRate = voiceSpeedRef.current;
@@ -96,27 +96,16 @@ export const Chat = () => {
         audio.play();
     };
 
-    // Síntese de voz local (fallback quando não há áudio do backend)
+    // Função de fallback silenciada (removeu window.speechSynthesis)
     const tocarAudioTexto = (texto, onEndCallback) => {
-        const synth = window.speechSynthesis;
-        if (!synth) {
-            if (onEndCallback) onEndCallback();
-            else iniciarEscuta();
-            return;
+        if (onEndCallback) {
+            onEndCallback();
+        } else {
+            // Pequeno delay para simular o tempo de resposta antes de abrir o mic
+            setTimeout(iniciarEscuta, 1000);
         }
-        const utterance = new SpeechSynthesisUtterance(texto);
-        utterance.lang = "pt-BR";
-        utterance.rate = voiceSpeedRef.current;
-        utterance.onend = () => {
-            if (onEndCallback) onEndCallback();
-            else iniciarEscuta();
-        };
-        synth.speak(utterance);
     };
 
-    // =========================
-    // PROCESSAR RESPOSTA DA API
-    // =========================
     const tratarRespostaApi = (data) => {
         adicionarMensagem(data.resposta, "bot");
 
@@ -126,7 +115,6 @@ export const Chat = () => {
             awaitingConfirmRef.current = true;
         }
 
-        // Toca o áudio — ao terminar ativa microfone automaticamente (exceto durante autenticação)
         if (data.audio_url) {
             tocarAudioBackend(data.audio_url);
         } else {
@@ -135,18 +123,20 @@ export const Chat = () => {
     };
 
     // =========================
-    // CONFIRMAÇÃO POR VOZ
+    // FLUXOS DE CONFIRMAÇÃO
     // =========================
     const confirmarPix = (transcricao) => {
         setAwaitingConfirm(false);
         awaitingConfirmRef.current = false;
         adicionarMensagem(transcricao, "user");
+        
         const msgAuth = `Perfeito! Iniciando autenticação via ${authMethod}...`;
         adicionarMensagem(msgAuth, "bot");
-        tocarAudioTexto(msgAuth, () => {
-            // Após falar, abre autenticação — NÃO volta a escutar
+
+        // Transição visual sem depender de áudio do sistema
+        setTimeout(() => {
             setAwaitingAuth(true);
-        });
+        }, 1200);
     };
 
     const cancelarPix = (transcricao) => {
@@ -156,26 +146,20 @@ export const Chat = () => {
         adicionarMensagem(transcricao, "user");
         const msgCancel = "Tudo bem! Cancelei. Pode me dizer o valor e o destinatário novamente.";
         adicionarMensagem(msgCancel, "bot");
-        tocarAudioTexto(msgCancel); // ao terminar → escuta novo comando
+        tocarAudioTexto(msgCancel); 
     };
 
-    // =========================
-    // PROCESSAR MENSAGEM
-    // =========================
     const processarMensagem = async (texto) => {
         adicionarMensagem(texto, "user");
         setLoading(true);
 
         try {
-            let historicoAtual = [];
-            setMessages(prev => { historicoAtual = prev; return prev; });
-
             const res = await fetch("http://127.0.0.1:8000/ouvir", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     texto,
-                    historico: historicoAtual,
+                    historico: messages,
                     contatos_validos: listFavoritesRef.current
                 }),
             });
@@ -186,7 +170,7 @@ export const Chat = () => {
         } catch (err) {
             console.error("Erro IA", err);
             adicionarMensagem("Erro ao processar comando.", "bot");
-            iniciarEscuta();
+            setTimeout(iniciarEscuta, 1500);
         } finally {
             setLoading(false);
         }
@@ -197,15 +181,12 @@ export const Chat = () => {
         setLoading(true);
 
         try {
-            let historicoAtual = [];
-            setMessages(prev => { historicoAtual = prev; return prev; });
-
             const res = await fetch("http://127.0.0.1:8000/ouvir", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     texto,
-                    historico: historicoAtual,
+                    historico: [],
                     contatos_validos: favoritos
                 }),
             });
@@ -216,7 +197,7 @@ export const Chat = () => {
         } catch (err) {
             console.error("Erro IA", err);
             adicionarMensagem("Erro ao processar comando.", "bot");
-            iniciarEscuta();
+            setTimeout(iniciarEscuta, 1500);
         } finally {
             setLoading(false);
         }
@@ -229,9 +210,6 @@ export const Chat = () => {
         }
     };
 
-    // =========================
-    // INICIALIZAÇÃO
-    // =========================
     useEffect(() => {
         if (location.state?.authMethod) setAuthMethod(location.state.authMethod);
 
@@ -243,7 +221,6 @@ export const Chat = () => {
         }
 
         const storedUser = localStorage.getItem('user');
-
         if (!storedUser) {
             dispararPrimeiraMensagem([]);
             return;
@@ -273,9 +250,6 @@ export const Chat = () => {
         }
     }, []);
 
-    // =========================
-    // AUTENTICAÇÃO
-    // =========================
     const autenticar = () => {
         adicionarMensagem(`Autenticando via ${authMethod}...`, "bot");
 
@@ -286,31 +260,21 @@ export const Chat = () => {
         }, 2000);
     };
 
-    // =========================
-    // RENDER
-    // =========================
     return (
         <div>
-            {/* CHAT */}
             <div className="containerChat">
                 {messages.map((msg, index) => (
                     <div key={index} className={`containerBox ${msg.sender === 'user' ? 'userAlign' : 'botAlign'}`}>
                         <div className="messageBox">
                             {msg.sender === 'user' && (
-                                <div className="userProfile">
-                                    <i className="fa-solid fa-user"></i>
-                                </div>
+                                <div className="userProfile"><i className="fa-solid fa-user"></i></div>
                             )}
-
                             <div className="messageContent">
                                 <div className="messageText">{msg.text}</div>
                                 <div className="messageTime">{msg.time}</div>
                             </div>
-
                             {msg.sender === 'bot' && (
-                                <div className="userProfile">
-                                    <i className="fa-solid fa-robot"></i>
-                                </div>
+                                <div className="userProfile"><i className="fa-solid fa-robot"></i></div>
                             )}
                         </div>
                     </div>
@@ -323,11 +287,9 @@ export const Chat = () => {
                         </div>
                     </div>
                 )}
-
                 <div ref={chatEndRef} />
             </div>
 
-            {/* AUTENTICAÇÃO DINÂMICA */}
             {awaitingAuth && (
                 <div className="authOverlay">
                     <div className="authContent">
@@ -349,9 +311,7 @@ export const Chat = () => {
                         {authMethod === "biometria" && (
                             <>
                                 <div className="biometryCard" style={{ marginTop: '150px' }} onClick={autenticar}>
-                                    <div className="fingerprintIcon">
-                                        <i className="fa-solid fa-fingerprint"></i>
-                                    </div>
+                                    <div className="fingerprintIcon"><i className="fa-solid fa-fingerprint"></i></div>
                                 </div>
                                 <p className="authFooterText" style={{ marginTop: '20px' }}>TOQUE PARA CONFIRMAR</p>
                             </>
@@ -379,7 +339,6 @@ export const Chat = () => {
                             </>
                         )}
                     </div>
-
                     <button className="debugSkipButton" onClick={autenticar}>
                         <i className="fa-solid fa-bug"></i> PULAR AUTENTICAÇÃO (DEBUG)
                     </button>

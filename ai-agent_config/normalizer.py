@@ -14,6 +14,7 @@ def normalizar_texto(texto: str) -> str:
         "pra ": "para ",
         "pro ": "para o ",
         "pixx": "pix",
+        "pics": "pix",
         "pique": "pix",
         "reai": "reais",
         "reais reais": "reais",

@@ -44,6 +44,11 @@ public class UserService {
      * Cria um novo usuário com base nos dados fornecidos no DTO (Data Transfer Object) e retorna o usuário criado.
      */
     public User createUser(CreateUserDTO dto) {
+
+        if (userRepository.existsByCpf(dto.getCpf())) {
+            throw new RuntimeException("CPF já cadastrado no sistema.");
+        }
+        
         User user = new User();
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
