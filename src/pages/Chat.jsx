@@ -139,7 +139,7 @@ export const Chat = () => {
         setAwaitingConfirm(false);
         awaitingConfirmRef.current = false;
         adicionarMensagem(transcricao, "user");
-        
+
         // enrich pendingPix with additional meta
         const now = new Date();
         setPendingPix(prev => ({
@@ -167,7 +167,7 @@ export const Chat = () => {
         adicionarMensagem(transcricao, "user");
         const msgCancel = "Tudo bem! Cancelei. Pode me dizer o valor e o destinatário novamente.";
         adicionarMensagem(msgCancel, "bot");
-        tocarAudioTexto(msgCancel); 
+        tocarAudioTexto(msgCancel);
     };
 
     const processarMensagem = async (texto) => {
