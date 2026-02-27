@@ -4,6 +4,7 @@
     width: 100%;
     max-width: 500px; /* same as footer max width */
     margin: 0 auto;
+    gap: 30px;
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     display: flex;
