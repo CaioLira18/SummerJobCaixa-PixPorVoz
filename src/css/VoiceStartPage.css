@@ -1,23 +1,56 @@
-/* Container */
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+/* ========================= */
+/* CSS VARIABLES             */
+/* ========================= */
+
+:root {
+  --blue-deep:    #0a2e5c;
+  --blue-mid:     #0d4d8a;
+  --blue-bright:  #1568c4;
+  --blue-light:   #2a89ff;
+  --accent-green: #00e676;
+  --accent-cyan:  #00d4ff;
+  --white:        #ffffff;
+  --white-dim:    rgba(255,255,255,0.12);
+  --white-soft:   rgba(255,255,255,0.06);
+  --glass-border: rgba(255,255,255,0.18);
+  --radius-xl:    28px;
+  --radius-lg:    18px;
+  --radius-md:    12px;
+  --font-main:    'Sora', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+}
+
+/* ========================= */
+/* CONTAINER                 */
+/* ========================= */
+
 .voiceStartContainer {
   height: 100%;
-  background: linear-gradient(180deg, #1565a8 0%, #0d4d8a 100%);
-  color: white;
+  min-height: 100dvh;
+  background: #1568c4;
+  color: var(--white);
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: Arial, sans-serif;
+  font-family: var(--font-main);
   position: relative;
   overflow: hidden;
 }
 
-/* Header */
+
+
+/* ========================= */
+/* HEADER                    */
+/* ========================= */
+
 .header {
   width: 100%;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 20px 16px 0;
+  padding: 24px 20px 0;
   box-sizing: border-box;
 }
 
@@ -25,191 +58,283 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
 }
 
 .headerLabel {
-  font-size: 11px;
-  letter-spacing: 1.5px;
-  opacity: 0.7;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  opacity: 0.5;
   text-transform: uppercase;
 }
 
 .headerTitle {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.debugLine {
-  font-size: 10px;
-  opacity: 0.5;
-  letter-spacing: 1px;
-}
-
-/* Icon buttons */
-.iconBtn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.2);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
   color: white;
-  font-size: 18px;
+}
+
+/* ========================= */
+/* ICON BUTTONS              */
+/* ========================= */
+
+.iconBtn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: var(--white-dim);
+  color: white;
+  font-size: 16px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  backdrop-filter: blur(10px);
+  transition: background 0.2s, transform 0.15s;
 }
 
 .iconBtn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255,255,255,0.22);
+  transform: scale(1.06);
 }
 
-/* Mic */
+/* ========================= */
+/* MIC AREA                  */
+/* ========================= */
+
 .micArea {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 40px;
+  margin-top: 30px;
+}
+
+/* Outer ring glow */
+.micRingOuter {
+  width: 230px;
+  height: 230px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .micButton {
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  border: 8px solid rgba(255, 255, 255, 0.9);
-  background: rgba(255, 255, 255, 0.15);
+  border: 4px solid rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.12);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s ease;
-  box-shadow: 0 0 60px rgba(255, 255, 255, 0.1);
+  transition: transform 0.2s ease, background 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.2);
 }
 
-.micButton:hover {
+.micButton:hover:not(:disabled) {
   transform: scale(1.04);
+  background: rgba(255,255,255,0.18);
+}
+
+.micButton:disabled {
+  cursor: default;
+  opacity: 0.6;
 }
 
 .micButton.listening {
   background: #1dd75b;
   border-color: #1dd75b;
-  animation: pulse 1.2s infinite;
+  animation: pulseGreen 1.4s ease-out infinite;
 }
 
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(29, 215, 91, 0.6); }
-  70% { box-shadow: 0 0 0 30px rgba(29, 215, 91, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(29, 215, 91, 0); }
+.micButton.loading {
+  background: rgba(42,137,255,0.25);
+  border-color: rgba(255,255,255,0.5);
+  animation: pulseCyan 1.2s ease-in-out infinite;
 }
 
-/* Waiting text */
-.waitingText {
-  font-size: 13px;
-  letter-spacing: 2px;
-  opacity: 0.6;
-  margin: 40px 0 20px;
+@keyframes pulseGreen {
+  0%   { box-shadow: 0 0 0 0 rgba(29,215,91,0.6); }
+  70%  { box-shadow: 0 0 0 36px rgba(29,215,91,0); }
+  100% { box-shadow: 0 0 0 0 rgba(29,215,91,0); }
 }
 
-/* Listening pill */
-.listeningPill {
+@keyframes pulseCyan {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,212,255,0.5); }
+  50%       { box-shadow: 0 0 0 22px rgba(0,212,255,0.15); }
+}
+
+/* ========================= */
+/* STATUS / TRANSCRIPT       */
+/* ========================= */
+
+.voiceStatusFeedback {
+  width: 100%;
+  padding: 0 24px;
+  box-sizing: border-box;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 30px;
-  padding: 10px 24px;
-  font-size: 13px;
-  font-weight: bold;
+  gap: 12px;
+  margin: 28px 0 32px;
+  margin-bottom: 100px;
+}
+
+.userTranscription {
+  font-family: var(--font-mono);
+  font-size: 12px;
   letter-spacing: 1.5px;
-  opacity: 0;
+  text-transform: uppercase;
+  opacity: 0.55;
+  text-align: center;
+  margin: 0;
+  min-height: 18px;
   transition: opacity 0.3s;
-  margin-bottom: 50px;
 }
 
-.listeningPill.active {
-  opacity: 1;
+.userTranscription:not(:empty) {
+  opacity: 0.9;
+  font-size: 14px;
+  letter-spacing: 0;
+  font-family: var(--font-main);
+  text-transform: none;
 }
 
-.listeningPill .dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #1dd75b;
+.confirmHint {
+  background: rgba(0,230,118,0.1);
+  border: 1px solid rgba(0,230,118,0.35);
+  border-radius: 40px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-green);
+  text-align: center;
+  margin: 0;
+  animation: fadeSlideUp 0.4s ease;
 }
 
-/* Page dots */
-.pageDots {
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ========================= */
+/* OVERLAY BASE              */
+/* ========================= */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(4px);
   display: flex;
-  gap: 6px;
-  margin-bottom: 30px;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
 }
 
-.dot-inactive {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
-  display: inline-block;
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
-.dot-active {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: white;
-  display: inline-block;
+/* ========================= */
+/* SETTINGS PANEL            */
+/* ========================= */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: #1568c4;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+  padding: 48px 24px 40px;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
-
-
-/* Settings panel */
 .settingsPanel {
-  background: #1565a8;
   width: 100%;
   max-width: 560px;
-  border-radius: 28px 28px 0 0;
-  padding: 28px 24px 40px;
-  box-sizing: border-box;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
 }
 
-.settingsHeader {
+.settingsPanelHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 28px;
+  margin-bottom: 32px;
 }
 
-.settingsTitle {
+.settingsPanelTitle {
+  font-family: var(--font-main);
   font-size: 22px;
-  font-weight: bold;
-  letter-spacing: 1px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: white;
+  text-transform: uppercase;
+}
+
+.settingsCloseBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: var(--white-dim);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.settingsCloseBtn:hover {
+  background: rgba(255,255,255,0.22);
 }
 
 .sectionLabel {
+  font-family: var(--font-main);
   font-size: 11px;
+  font-weight: 700;
   letter-spacing: 2px;
   opacity: 0.6;
-  margin: 20px 0 12px;
+  text-transform: uppercase;
+  margin: 0 0 12px;
 }
 
+/* Auth method list */
 .settingsList {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-bottom: 28px;
 }
 
-.settingsOption {
+.settingsList button {
   width: 100%;
   padding: 18px 20px;
-  border-radius: 16px;
+  border-radius: 14px;
   border: none;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255,255,255,0.1);
   color: white;
+  font-family: var(--font-main);
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   text-align: left;
   display: flex;
@@ -218,62 +343,275 @@
   transition: background 0.2s;
 }
 
-.settingsOption:hover {
-  background: rgba(255, 255, 255, 0.2);
+.settingsList button:hover {
+  background: rgba(255,255,255,0.16);
 }
 
-.settingsOption.activeOption {
+.settingsList button.activeOption {
   background: white;
-  color: #0d4d8a;
+  color: #1568c4;
 }
 
-.checkmark {
-  font-size: 18px;
-  font-weight: bold;
+.settingsList button.activeOption .checkIcon {
+  display: flex;
 }
 
-.speedOptions {
+.checkIcon {
+  display: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #1568c4;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: white;
+  flex-shrink: 0;
+}
+
+/* Speed — 3 buttons */
+.speedSection {
+  margin-top: 4px;
+}
+
+.speedButtons {
   display: flex;
   gap: 10px;
 }
 
 .speedBtn {
   flex: 1;
-  padding: 14px;
+  padding: 16px 10px;
   border-radius: 14px;
   border: none;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255,255,255,0.1);
   color: white;
+  font-family: var(--font-main);
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
+  text-align: center;
   transition: background 0.2s;
 }
 
 .speedBtn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255,255,255,0.18);
 }
 
 .speedBtn.activeSpeed {
   background: white;
-  color: #0d4d8a;
+  color: #1568c4;
 }
 
-.simulateBtn {
-  width: 100%;
-  margin-top: 28px;
-  padding: 18px;
-  border-radius: 16px;
-  border: none;
-  background: #1dd75b;
+/* ========================= */
+/* AUTH OVERLAY              */
+/* ========================= */
+
+.authOverlay {
+  position: fixed;
+  inset: 0;
+  background: #1568c4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 56px 24px 44px;
+  z-index: 9999;
   color: white;
-  font-size: 14px;
-  font-weight: bold;
-  letter-spacing: 1.5px;
-  cursor: pointer;
-  transition: opacity 0.2s;
+  font-family: var(--font-main);
+  animation: fadeIn 0.3s ease;
 }
 
-.simulateBtn:hover {
-  opacity: 0.9;
+.authContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  text-align: center;
+  gap: 0;
+}
+
+.authTitle {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin: 0 0 6px;
+  color: white;
+}
+
+.authSubtitle {
+  font-size: 13px;
+  opacity: 0.55;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* --- FACIAL SCANNER --- */
+
+.facialScannerBox {
+  width: 200px;
+  height: 200px;
+  border: 2px solid var(--accent-cyan);
+  border-radius: 40px;
+  position: relative;
+  margin-top: 52px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 8px rgba(0,212,255,0.08),
+    inset 0 0 40px rgba(0,212,255,0.05);
+  cursor: pointer;
+}
+
+/* corner accents */
+.facialScannerBox::before,
+.facialScannerBox::after {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: var(--accent-cyan);
+  border-style: solid;
+}
+
+.facialScannerBox::before {
+  top: 10px; left: 10px;
+  border-width: 3px 0 0 3px;
+  border-radius: 6px 0 0 0;
+}
+
+.facialScannerBox::after {
+  bottom: 10px; right: 10px;
+  border-width: 0 3px 3px 0;
+  border-radius: 0 0 6px 0;
+}
+
+.scannerLine {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+  box-shadow: 0 0 12px var(--accent-cyan);
+  animation: scanMove 2.2s cubic-bezier(0.45,0,0.55,1) infinite;
+}
+
+@keyframes scanMove {
+  0%   { top: 8%; }
+  50%  { top: 88%; }
+  100% { top: 8%; }
+}
+
+/* --- BIOMETRY --- */
+
+.biometryCard {
+  width: 140px;
+  height: 160px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--glass-border);
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 52px;
+  font-size: 64px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.biometryCard:hover {
+  background: rgba(255,255,255,0.12);
+  transform: scale(1.04);
+}
+
+.biometryCard:active {
+  transform: scale(0.97);
+}
+
+/* --- PIN NUMPAD --- */
+
+.numpadContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin-top: 40px;
+  width: 100%;
+}
+
+.pinDisplay {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+.pinDot {
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.pinDot.filled {
+  background: var(--white);
+  border-color: var(--white);
+  box-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+.numpadGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.numpadBtn {
+  aspect-ratio: 1;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  color: white;
+  font-family: var(--font-main);
+  font-size: 22px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  padding: 0;
+  min-height: 72px;
+}
+
+.numpadBtn:hover {
+  background: rgba(255,255,255,0.15);
+  transform: scale(1.04);
+}
+
+.numpadBtn:active {
+  transform: scale(0.95);
+  background: rgba(255,255,255,0.22);
+}
+
+/* --- DEBUG SKIP BUTTON --- */
+
+.debugSkipButton {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.35);
+  padding: 11px 28px;
+  border-radius: 30px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: static; /* override absolute from Chat.css */
+}
+
+.debugSkipButton:hover {
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.7);
 }

@@ -12,6 +12,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+* {
+  font-family: 'CAIXA Std';
+}
+
 a {
   font-weight: 500;
   color: #646cff;
