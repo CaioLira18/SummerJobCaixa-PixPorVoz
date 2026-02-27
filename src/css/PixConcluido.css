@@ -10,7 +10,7 @@
     color: rgb(0, 0, 0);
     animation: fadeIn 0.4s ease-in-out;
     z-index: 9999;
-    width: 100%;
+    width: 500px;
 }
 
 .pixHeader {

@@ -13,18 +13,7 @@
   overflow: hidden;
 }
 
-/* Overlay */
-.overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(11, 45, 107, 0.95) 0%,
-    rgba(7, 29, 70, 0.85) 50%,
-    rgba(0, 0, 0, 0.7) 100%
-  );
-  z-index: 0;
-}
+
 
 .top-content {
   position: relative;

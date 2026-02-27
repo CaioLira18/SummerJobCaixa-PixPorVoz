@@ -351,6 +351,8 @@
     padding: 60px 20px 40px;
     z-index: 9999;
     color: white;
+    width: 500px;
+    margin: 0 auto;
 }
 
 .authContent {

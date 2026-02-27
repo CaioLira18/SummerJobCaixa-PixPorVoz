@@ -292,7 +292,7 @@ export const VoiceStartPage = () => {
 
       {/* ── SETTINGS OVERLAY ── */}
       {settingsOpen && (
-        <div className="overlay">
+        <div className="settingsBackdrop">
           <div className="settingsPanel">
 
             <div className="settingsPanelHeader">
