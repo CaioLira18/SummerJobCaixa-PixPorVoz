@@ -31,6 +31,8 @@
   outline: none;
   box-sizing: border-box;
   transition: border-color 0.2s;
+  background-color: white;
+  color: black;
 }
 
 .searchInput:focus {
@@ -187,6 +189,10 @@
 .userCpf {
     font-size: 12px;
     color: #718096;
+}
+
+.spanService {
+  margin-top: 50px;
 }
 
 /* Mensagem de lista vazia */

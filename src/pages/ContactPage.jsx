@@ -137,7 +137,7 @@ export const ContactPage = () => {
   return (
     <div className="homeContainer">
       <div className="homeServicosHeader">
-        <span>Favoritos</span>
+        <span className='spanService'>Favoritos</span>
         <span className='showAll' onClick={() => navigate(-1)}>Voltar</span>
       </div>
 
