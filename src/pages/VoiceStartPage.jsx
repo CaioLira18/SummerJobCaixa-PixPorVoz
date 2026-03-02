@@ -170,7 +170,7 @@ export const VoiceStartPage = () => {
 
   // === ÁUDIO ===
   const tocarAudioBackend = (audioUrl) => {
-    const audio = new Audio(`http://127.0.0.1:8000${audioUrl}`);
+    const audio = new Audio(`https://summerjobcaixa-pixporvoz-production-64ac.up.railway.app/${audioUrl}`);
     audio.playbackRate = voiceSpeedRef.current;
     audio.onended = () => { if (!awaitingConfirmRef.current) startListening(); };
     audio.play();
