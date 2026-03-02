@@ -1,22 +1,16 @@
-# 1. Imagem base
 FROM python:3.11-slim
 
-# 2. Diretório de trabalho
 WORKDIR /app
 
-# 3. Copia as dependências (subindo um nível para pegar o requirements da raiz)
-# No Docker, o contexto de build precisa permitir isso, ou você deve mover o requirements para dentro da pasta
-COPY requirements.txt ./ 
-
-# Se o comando acima falhar no build, mova o arquivo requirements.txt para dentro da pasta ai-agent_config
+# Como o Dockerfile está dentro da pasta, 
+# você precisa garantir que o requirements.txt esteja lá também.
+# Se o requirements estiver na raiz do projeto (fora desta pasta), 
+# mova ou copie uma cópia para dentro de 'ai-agent_config/'.
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 4. Copia o conteúdo da pasta atual (onde está o main.py) para o container
+# Copia tudo que está dentro de ai-agent_config para /app
 COPY . .
 
-# 5. Variáveis de ambiente
-ENV PORT=8080
-EXPOSE 8080
-
-# 6. Comando de inicialização
-CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT}"]
+# Garante que o Uvicorn use a porta do Railway e o host correto
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8080}"]
