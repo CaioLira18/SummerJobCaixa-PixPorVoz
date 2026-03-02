@@ -1,8 +1,11 @@
 .headerContainer {
     background: linear-gradient(to bottom, #00599A, #00B5E2);
-    padding:  16px 56px 16px;
+    padding: 26px 56px 16px;
     color: white;
     width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 100;
 }
 
 .headerlogo img {
@@ -17,6 +20,7 @@
     align-items: center;
     width: 100%;
     max-width: 100%;
+    gap: 8px;
 }
 
 .accountBox {
@@ -25,6 +29,7 @@
     gap: 8px;
     flex: 1;
     min-width: 0;
+    overflow: hidden;
 }
 
 .headerlogo {
@@ -36,6 +41,7 @@
     align-items: center;
     justify-content: center;
     border-radius: 2px;
+    flex-shrink: 0;
 }
 
 .headerlogo span {
@@ -50,6 +56,8 @@
     align-items: start;
     font-size: 12px;
     overflow: hidden;
+    min-width: 0;
+    flex: 1;
 }
 
 .accountInformations span {
@@ -57,6 +65,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
+    display: block;
 }
 
 .accountInformations span:first-child {
@@ -75,21 +84,64 @@
     cursor: pointer;
 }
 
-/* Responsividade para telas pequenas */
-@media (max-width: 360px) {
+/* Tablets e telas médias */
+@media (max-width: 768px) {
     .headerContainer {
-        padding: 32px 12px 48px 12px;
+        padding: 20px 24px 14px;
     }
-    
-    .accountInformations {
-        font-size: 11px;
+}
+
+/* Telas pequenas */
+@media (max-width: 480px) {
+    .headerContainer {
+        padding: 16px 16px 12px;
     }
-    
+
     .headerIcons {
         gap: 12px;
     }
-    
+
     .headerIcons i {
-        font-size: 16px;
+        font-size: 17px;
+    }
+}
+
+/* Telas muito pequenas */
+@media (max-width: 360px) {
+    .headerContainer {
+        padding: 14px 12px 10px;
+    }
+
+    .accountInformations {
+        font-size: 11px;
+    }
+
+    .headerIcons {
+        gap: 8px;
+    }
+
+    .headerIcons i {
+        font-size: 15px;
+    }
+}
+
+/* Telas minúsculas (ex: Galaxy Fold fechado ~280px) */
+@media (max-width: 300px) {
+    .headerContainer {
+        padding: 12px 8px 10px;
+    }
+
+    .headerlogo {
+        width: 20px;
+        height: 20px;
+        min-width: 20px;
+    }
+
+    .headerIcons {
+        gap: 6px;
+    }
+
+    .headerIcons i {
+        font-size: 14px;
     }
 }
