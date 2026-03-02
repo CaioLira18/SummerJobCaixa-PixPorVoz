@@ -11,4 +11,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # inicia FastAPI
-CMD ["sh", "-c", "exec uvicorn main:app --host 0.0.0.0 --port $PORT"]
+CMD ["sh", "-c", "exec uvicorn ai-agent_config.main:app --host 0.0.0.0 --port $PORT"]
