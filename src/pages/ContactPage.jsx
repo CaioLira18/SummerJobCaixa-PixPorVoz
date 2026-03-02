@@ -105,7 +105,7 @@ export const ContactPage = () => {
     };
 
     try {
-      const response = await fetch(`http://localhost:8080/api/users/${storedUser.id}`, {
+      const response = await fetch(`https://summerjobcaixa-pixporvoz-production.up.railway.app/api/users/${storedUser.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedData)
