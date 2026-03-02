@@ -187,7 +187,6 @@
 .userCpf {
     font-size: 12px;
     color: #718096;
-    font-family: monospace; /* Melhora a leitura de números */
 }
 
 /* Mensagem de lista vazia */

@@ -6,7 +6,6 @@
     height: 100vh;
     background: linear-gradient(135deg, #005ca9 0%, #003366 100%); /* Azul Caixa */
     color: white;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
     padding: 20px;
   }
