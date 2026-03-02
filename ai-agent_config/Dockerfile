@@ -1,22 +1,21 @@
-# 1. Usamos uma imagem leve focada em Python
+# 1. Imagem base leve do Python
 FROM python:3.11-slim
 
-# 2. Define o diretório de trabalho dentro do container
+# 2. Diretório de trabalho no container
 WORKDIR /app
 
-# 3. Copia o arquivo de dependências que está na sua raiz
+# 3. Copia o requirements da raiz para instalar as dependências
 COPY requirements.txt .
-
-# 4. Instala as bibliotecas do Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 5. Copia a pasta do código Python para dentro do container
-# Isso garante que a pasta 'ai-agent_config' exista no destino
-COPY ai-agent_config/ ./ai-agent_config/
+# 4. Copia TODO o conteúdo da sua pasta ai-agent_config para a raiz /app do container
+# Isso faz com que o main.py fique diretamente em /app/main.py
+COPY ai-agent_config/ .
 
-# 6. Expõe a porta que o Railway utiliza
+# 5. Define a porta (Railway usa a 8080 por padrão se não houver variável)
+ENV PORT=8080
 EXPOSE 8080
 
-# 7. Comando de inicialização corrigido
-# Usamos o caminho do módulo 'ai-agent_config.main' para o Uvicorn encontrar o app
-CMD ["uvicorn", "ai-agent_config.main:app", "--host", "0.0.0.0", "--port", "8080"]
+# 6. Comando de inicialização
+# Agora que o conteúdo da pasta está na raiz do container, chamamos apenas 'main:app'
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT}"]
