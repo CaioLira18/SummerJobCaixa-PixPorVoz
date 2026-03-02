@@ -95,7 +95,7 @@ export const ContactPage = () => {
     const currentContactIds = storedUser.contactIds || [];
 
     if (currentContactIds.includes(foundUser.id)) {
-      alert("Este contacto já está nos favoritos.");
+      alert("Este Favorito já está nos favoritos.");
       return;
     }
 
@@ -127,10 +127,10 @@ export const ContactPage = () => {
 
         setFoundUser(null);
         setCpf('');
-        alert('Contacto adicionado com sucesso!');
+        alert('Favorito adicionado com sucesso!');
       }
     } catch (error) {
-      alert('Erro ao guardar contacto.');
+      alert('Erro ao guardar Favorito.');
     }
   };
 
@@ -143,7 +143,7 @@ export const ContactPage = () => {
 
       <div className="homeAmountContainer contactSearchContainer">
         <div className="searchBox">
-          <label>Adicionar novo contacto por CPF</label>
+          <label>Adicionar novo Favorito por CPF</label>
           <input
             className="searchInput"
             type="text"
