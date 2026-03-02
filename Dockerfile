@@ -30,5 +30,6 @@ RUN pip install --no-cache-dir -r requirements.txt --break-system-packages
 # Expõe a porta padrão
 EXPOSE 8080
 
+
 # Comando para rodar o Python (ajustado para o caminho do módulo)
 CMD ["uvicorn", "ai-agent_config.main:app", "--host", "0.0.0.0", "--port", "8080"]
