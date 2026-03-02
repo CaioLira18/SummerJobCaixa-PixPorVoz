@@ -1,6 +1,7 @@
 .headerContainer {
     background: linear-gradient(to bottom, #00599A, #00B5E2);
     padding: 26px 56px 16px;
+    padding-top: calc(env(safe-area-inset-top) + 26px);
     color: white;
     width: 100%;
     box-sizing: border-box;
@@ -88,6 +89,7 @@
 @media (max-width: 768px) {
     .headerContainer {
         padding: 20px 24px 14px;
+        padding-top: calc(env(safe-area-inset-top) + 20px);
     }
 }
 
@@ -95,6 +97,7 @@
 @media (max-width: 480px) {
     .headerContainer {
         padding: 16px 16px 12px;
+        padding-top: calc(env(safe-area-inset-top) + 16px);
     }
 
     .headerIcons {
@@ -110,6 +113,7 @@
 @media (max-width: 360px) {
     .headerContainer {
         padding: 14px 12px 10px;
+        padding-top: calc(env(safe-area-inset-top) + 14px);
     }
 
     .accountInformations {
@@ -129,6 +133,7 @@
 @media (max-width: 300px) {
     .headerContainer {
         padding: 12px 8px 10px;
+        padding-top: calc(env(safe-area-inset-top) + 12px);
     }
 
     .headerlogo {
