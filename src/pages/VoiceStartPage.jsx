@@ -40,7 +40,7 @@ export const VoiceStartPage = () => {
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       if (parsedUser.contactIds?.length > 0) {
-        fetch("http://localhost:8080/api/users/list-by-ids", {
+        fetch("https://summerjobcaixa-pixporvoz-production.up.railway.app/api/users/list-by-ids", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(parsedUser.contactIds),

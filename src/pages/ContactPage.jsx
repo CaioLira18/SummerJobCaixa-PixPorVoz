@@ -16,7 +16,7 @@ export const ContactPage = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:8080/api/users/list-by-ids`, {
+      const response = await fetch(`https://summerjobcaixa-pixporvoz-production.up.railway.app/api/users/list-by-ids`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user.contactIds)
@@ -36,7 +36,7 @@ export const ContactPage = () => {
     if (!storedUser?.id) return;
 
     // Busca o usuário atualizado do backend para garantir contactIds frescos
-    fetch(`http://localhost:8080/api/users/${storedUser.id}`)
+    fetch(`https://summerjobcaixa-pixporvoz-production.up.railway.app/api/users/${storedUser.id}`)
       .then(res => res.ok ? res.json() : null)
       .then(freshUser => {
         if (!freshUser) return;
