@@ -1,6 +1,7 @@
 .login-container {
-  width: 500px;           /* Ocupa tudo em telas pequenas */
-  margin: 0 auto;        /* CENTRALIZA o container na página */
+  width: 100%;           /* Mudado de 500px para 100% */
+  max-width: 500px;      /* Limita o tamanho máximo */
+  margin: 0 auto;
   height: 100vh;
   position: relative;
   background-size: cover;
@@ -12,7 +13,6 @@
   font-family: "Segoe UI", sans-serif;
   overflow: hidden;
 }
-
 
 
 .top-content {
@@ -27,6 +27,7 @@
 
 /* Card */
 .login-card {
+  width: 500px;
   position: relative;
   z-index: 1;
   background: #f2f2f2;
@@ -161,11 +162,6 @@
     width: 65px;
   }
 
-  .login-card {
-    padding: 24px 20px;
-    border-radius: 20px 20px 0 0;
-  }
-
   .card-title {
     font-size: 1.2rem;
     margin-bottom: 20px;
@@ -173,5 +169,17 @@
 
   .input-group input {
     padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    max-width: 100%; /* Ocupa a largura total do celular */
+  }
+
+  .login-card {
+    border-radius: 20px 20px 0 0; 
+    width: 500px;
+    margin: 0 auto;
   }
 }
