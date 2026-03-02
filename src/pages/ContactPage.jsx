@@ -68,7 +68,7 @@ export const ContactPage = () => {
     setFoundUser(null);
 
     try {
-      const response = await fetch(`http://localhost:8080/api/users/search/${cleanCpf}`);
+      const response = await fetch(`https://summerjobcaixa-pixporvoz-production.up.railway.app/api/users/search/${cleanCpf}`);
       if (response.ok) {
         const data = await response.json();
         setFoundUser(data);
