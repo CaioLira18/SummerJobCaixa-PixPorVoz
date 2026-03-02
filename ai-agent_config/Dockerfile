@@ -5,7 +5,7 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Copia o requirements que você moveu para dentro da pasta
-COPY requirements.txt .
+COPY requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copia TODOS os arquivos de 'ai-agent_config' para a raiz '/app' do container
