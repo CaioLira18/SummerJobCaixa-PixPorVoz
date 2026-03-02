@@ -14,4 +14,4 @@ COPY . .
 
 # Comando de inicialização usando a variável de porta do Railway
 # Agora o 'main:app' vai funcionar porque o arquivo está na raiz do container
-CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8080}"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
