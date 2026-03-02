@@ -1,0 +1,10 @@
+azure-cognitiveservices-speech
+azure-ai-textanalytics
+python-dotenv
+azure.cognitiveservices.speech
+fastapi
+uvicorn
+openai
+huggingface_hub
+groq
+elevenlabs
