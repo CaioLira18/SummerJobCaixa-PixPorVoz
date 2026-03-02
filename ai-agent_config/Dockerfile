@@ -1,21 +1,22 @@
-# 1. Imagem base leve do Python
+# 1. Imagem base
 FROM python:3.11-slim
 
-# 2. Diretório de trabalho no container
+# 2. Diretório de trabalho
 WORKDIR /app
 
-# 3. Copia o requirements da raiz para instalar as dependências
-COPY requirements.txt .
+# 3. Copia as dependências (subindo um nível para pegar o requirements da raiz)
+# No Docker, o contexto de build precisa permitir isso, ou você deve mover o requirements para dentro da pasta
+COPY requirements.txt ./ 
+
+# Se o comando acima falhar no build, mova o arquivo requirements.txt para dentro da pasta ai-agent_config
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 4. Copia TODO o conteúdo da sua pasta ai-agent_config para a raiz /app do container
-# Isso faz com que o main.py fique diretamente em /app/main.py
-COPY ai-agent_config/ .
+# 4. Copia o conteúdo da pasta atual (onde está o main.py) para o container
+COPY . .
 
-# 5. Define a porta (Railway usa a 8080 por padrão se não houver variável)
+# 5. Variáveis de ambiente
 ENV PORT=8080
 EXPOSE 8080
 
 # 6. Comando de inicialização
-# Agora que o conteúdo da pasta está na raiz do container, chamamos apenas 'main:app'
 CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT}"]
