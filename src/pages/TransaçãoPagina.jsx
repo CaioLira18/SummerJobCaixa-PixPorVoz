@@ -24,6 +24,7 @@ export const TransaçãoPagina = () => {
             type="text"
             className="pix-input"
             placeholder="Digite a chave Pix"
+            style={{color: 'black'}}
             value={pixKey}
             onChange={(e) => setPixKey(e.target.value)}
           />

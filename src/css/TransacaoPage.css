@@ -159,6 +159,8 @@
   transition: border-color 0.2s;
 }
 
+
+
 .pix-input:focus {
   outline: none;
   border-color: #0066CC;
