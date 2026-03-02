@@ -100,7 +100,7 @@ export const VoiceStartPage = () => {
   const processarComIA = async (texto) => {
     setLoading(true);
     try {
-      const res = await fetch("http://127.0.0.1:8000/ouvir", {
+      const res = await fetch("https://summerjobcaixa-pixporvoz-production-64ac.up.railway.app/ouvir", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

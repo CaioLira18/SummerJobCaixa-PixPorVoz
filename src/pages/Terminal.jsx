@@ -18,7 +18,7 @@ export const Terminal = () => {
       const texto = event.results[0][0].transcript;
 
       try {
-        const response = await fetch("http://127.0.0.1:8000/ouvir", {
+        const response = await fetch("https://summerjobcaixa-pixporvoz-production-64ac.up.railway.app/ouvir", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ texto }),
