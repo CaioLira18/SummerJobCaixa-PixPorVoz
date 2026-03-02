@@ -1,17 +1,14 @@
-# Usa uma imagem leve de Python
 FROM python:3.11-slim
 
-# Define o diretório de trabalho como /app
+# diretório padrão do container
 WORKDIR /app
 
-# Copia o requirements que você moveu para dentro da pasta
+# instala dependências primeiro (cache otimizado)
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia TODOS os arquivos de 'ai-agent_config' para a raiz '/app' do container
-# Isso garante que o main.py esteja em /app/main.py
+# copia o restante do projeto
 COPY . .
 
-# Comando de inicialização usando a variável de porta do Railway
-# Agora o 'main:app' vai funcionar porque o arquivo está na raiz do container
+# inicia FastAPI
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
