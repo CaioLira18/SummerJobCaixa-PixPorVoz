@@ -321,16 +321,6 @@
 /* OVERLAY DE AUTENTICAÇÃO */
 /* ========================= */
 
-.authOverlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-}
-
 /* ========================= */
 /* CAIXA DE AUTENTICAÇÃO */
 /* ========================= */
@@ -338,22 +328,6 @@
 /* ========================= */
 /* NOVO OVERLAY DE AUTENTICAÇÃO (IDENTICO À IMAGEM) */
 /* ========================= */
-
-/* Estilos Base do Overlay */
-.authOverlay {
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(180deg, #1068ab 0%, #064d8a 100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between; /* Espaça o conteúdo do botão de debug */
-    padding: 60px 20px 40px;
-    z-index: 9999;
-    color: white;
-    width: 500px;
-    margin: 0 auto;
-}
 
 .authContent {
     display: flex;

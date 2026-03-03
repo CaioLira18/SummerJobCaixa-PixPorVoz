@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 export const Footer = () => {
   return (
@@ -7,15 +8,17 @@ export const Footer = () => {
         <i className="fa-solid fa-house"></i>
         <a href="/"><span>Início</span></a>
       </div>
-      <div className="bottomNavItem">
+      <div className="bottomNavItem off">
         <i className="fa-solid fa-file-lines"></i>
         <span>Extrato</span>
       </div>
-      <div className="bottomNavItem">
-        <i class="fa-brands fa-pix"></i>
-        <span>Pix</span>
-      </div>
-      <div className="bottomNavItem">
+      <Link to={'/areaPix'}>
+        <div className="bottomNavItem">
+          <i class="fa-brands fa-pix"></i>
+          <span>Pix</span>
+        </div>
+      </Link>
+      <div className="bottomNavItem off">
         <i className="fa-solid fa-bars"></i>
         <span>Menu</span>
       </div>

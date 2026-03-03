@@ -23,7 +23,15 @@
     cursor: pointer;
 }
 
+.bottomNavItem.off {
+    opacity: 0.6;
+}
+
 .bottomNavItem a {
+    color: white;
+}
+
+.bottomNavItem.off i,a {
     color: white;
 }
 

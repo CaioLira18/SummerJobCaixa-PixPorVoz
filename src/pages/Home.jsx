@@ -1,52 +1,36 @@
 import React, { useEffect, useState } from 'react'
 import { Amount } from '../components/Amount'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Header } from '../components/Header';
 
-export const Home = ({setIsVisible, isVisible }) => {
+export const Home = () => {
+  // 1. Criamos o estado aqui no pai (Home)
+  const [isVisible, setIsVisible] = useState(false);
+  const [name, setName] = useState('');
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado para controlar se o usuário está autenticado ou não
-  const [isAdmin, setIsAdmin] = useState(false); // Estado para controlar se o usuário é admin ou não (pode ser usado para mostrar opções adicionais no futuro)
-  const [name, setName] = useState(''); // Estado para armazenar o nome do usuário, que pode ser exibido na interface para uma experiência mais personalizada
-
-  {/**
-  Hook do React Router para navegação programática, permitindo redirecionar o usuário
-  para outras páginas com base em ações ou condições específicas
-  */}
-  const navigate = useNavigate();
-
-  {/**
-    useEffect para verificar se há um usuário armazenado no localStorage quando o componente é montado.
-    Se um usuário for encontrado, ele é parseado e o estado de autenticação é atualizado para refletir que o usuário está logado.
-    O nome do usuário também é extraído e armazenado no estado para uso futuro na interface.
-    */}
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       try {
-        const parsedUser = JSON.parse(storedUser); // Tenta parsear os dados do usuário armazenados no localStorage
-        setIsAuthenticated(true); // Atualiza o estado para indicar que o usuário está autenticado
-        setName(parsedUser.name || ''); // Armazena o nome do usuário no estado para uso futuro na interface
+        const parsedUser = JSON.parse(storedUser);
+        setName(parsedUser.name || '');
       } catch (err) {
-        console.error("Erro ao processar usuário do localStorage", err); // Log detalhado do erro para facilitar a depuração caso o JSON esteja corrompido ou mal formatado
+        console.error("Erro ao processar usuário do localStorage", err);
       }
     }
   }, []);
 
-
   return (
-    
     <div className="homeContainer">
+      {/* 2. Passamos o estado e a função de mudar o estado para o Header */}
       <Header isVisible={isVisible} setIsVisible={setIsVisible} />
 
       <div className="homeBox">
         <div className="homeAmountContainer">
-          <Amount isVisible={isVisible} /> {/* Componente para exibir o saldo do usuário, recebe a prop isVisible para controlar a visibilidade do valor */}
+          {/* 3. Passamos o mesmo estado isVisible para o Amount */}
+          <Amount isVisible={isVisible} /> 
         </div>
 
-        {/**
-         * Opções principais da home, como pagar emprestado, pagar conta e fazer Pix.
-         */}
         <div className="homeOptionsContainer">
           <div className="homeOptionsBox disabeled">
             <i className="fa-solid fa-suitcase"></i>
@@ -91,7 +75,7 @@ export const Home = ({setIsVisible, isVisible }) => {
           </div>
           <Link to="/contacts">
             <div className="homeServicoCard">
-              <div className="iconCircle"><i class="fa-solid fa-star"></i></div>
+              <div className="iconCircle"><i className="fa-solid fa-star"></i></div>
               <span>Seus Favoritos</span>
             </div>
           </Link>

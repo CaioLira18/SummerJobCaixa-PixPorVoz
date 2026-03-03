@@ -10,20 +10,23 @@ const PixConfirmado = () => {
     const timer = setTimeout(() => {
       // encaminha o estado recebido (valor/destinatário) para o comprovante
       navigate("/pixComprovante", { state: location.state });
-    }, 4500);
+    }, 45000000);
 
     return () => clearTimeout(timer);
   }, [navigate, location.state]);
 
   return (
     <div className="pixSuccessContainer">
-      <div className="pixSuccessCircle">
-        <i className="fa-solid fa-check"></i>
-      </div>
+      <div className="alignCenterContainer">
+        <div className="pixSuccessCircle">
+          <i className="fa-solid fa-check"></i>
+        </div>
 
-      <h1>CONFIRMADO!</h1>
-      <p>Transação concluída</p>
+        <h1>CONFIRMADO!</h1>
+        <p>Transação concluída</p>
+      </div>
     </div>
+
   );
 };
 

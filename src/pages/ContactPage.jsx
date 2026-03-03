@@ -35,23 +35,19 @@ export const ContactPage = () => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     if (!storedUser?.id) return;
 
-    // Busca o usuário atualizado do backend para garantir contactIds frescos
     fetch(`https://summerjobcaixa-pixporvoz-production.up.railway.app/api/users/${storedUser.id}`)
       .then(res => res.ok ? res.json() : null)
       .then(freshUser => {
         if (!freshUser) return;
 
-        // Sincroniza o localStorage com os dados mais recentes
         const updatedUser = {
           ...storedUser,
           contactIds: freshUser.contactIds || []
         };
         localStorage.setItem('user', JSON.stringify(updatedUser));
-
         loadContacts(updatedUser);
       })
       .catch(() => {
-        // Fallback: tenta com o que está no localStorage
         loadContacts(storedUser);
       });
   }, []);
@@ -64,7 +60,7 @@ export const ContactPage = () => {
 
     const cleanCpf = cpf.replace(/\D/g, '');
     setLoading(true);
-    setMessage('');
+    setMessage(''); // Limpa mensagens anteriores
     setFoundUser(null);
 
     try {
@@ -84,18 +80,17 @@ export const ContactPage = () => {
 
   const handleAddContact = async () => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
-
     if (!storedUser) return;
 
     if (foundUser.id === storedUser.id) {
-      alert("Não pode adicionar-se a si mesmo.");
+      setMessage("Você não pode adicionar a si mesmo.");
       return;
     }
 
     const currentContactIds = storedUser.contactIds || [];
 
     if (currentContactIds.includes(foundUser.id)) {
-      alert("Este Favorito já está nos favoritos.");
+      setMessage("Este contato já está nos seus favoritos.");
       return;
     }
 
@@ -113,24 +108,20 @@ export const ContactPage = () => {
 
       if (response.ok) {
         const userFromServer = await response.json();
-
-        // 🔥 garante que o localStorage tenha contactIds atualizado
         const updatedUser = {
           ...userFromServer,
           contactIds: updatedData.contactIds
         };
 
         localStorage.setItem('user', JSON.stringify(updatedUser));
-
-        // 🔥 recarrega a lista completa do backend
         await loadContacts(updatedUser);
 
         setFoundUser(null);
         setCpf('');
-        alert('Favorito adicionado com sucesso!');
+        setMessage('Favorito adicionado com sucesso!'); // Mensagem de sucesso real
       }
     } catch (error) {
-      alert('Erro ao guardar Favorito.');
+      setMessage('Erro ao salvar favorito no servidor.');
     }
   };
 
@@ -155,7 +146,13 @@ export const ContactPage = () => {
             {loading ? 'A procurar...' : 'Pesquisar'}
           </button>
         </div>
-        {message && <p className="errorMessage">{message}</p>}
+        
+        {/* Renderização condicional da mensagem (Erro ou Sucesso) */}
+        {message && (
+          <p className={message.includes('sucesso') ? "sucessMessage" : "errorMessage"}>
+            {message}
+          </p>
+        )}
       </div>
 
       {foundUser && (
