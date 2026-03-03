@@ -10,6 +10,7 @@
     animation: fadeIn 0.4s ease-in-out;
     z-index: 9999;
     width: 500px;
+    margin: 0 auto;
 }
 
 .pixSuccessCircle {
@@ -29,7 +30,6 @@
     align-items: center;
     justify-self: center;
     flex-direction: column;
-    margin-right: 55px;
 }
 
 .pixSuccessCircle i {

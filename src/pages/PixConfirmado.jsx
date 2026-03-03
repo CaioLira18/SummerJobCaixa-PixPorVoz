@@ -10,7 +10,7 @@ const PixConfirmado = () => {
     const timer = setTimeout(() => {
       // encaminha o estado recebido (valor/destinatário) para o comprovante
       navigate("/pixComprovante", { state: location.state });
-    }, 4500);
+    }, 45000000);
 
     return () => clearTimeout(timer);
   }, [navigate, location.state]);
