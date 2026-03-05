@@ -100,7 +100,7 @@ export const VoiceStartPage = () => {
   const processarComIA = async (texto) => {
     setLoading(true);
     try {
-      const res = await fetch("https://summerjobcaixa-pixporvoz-production-64ac.up.railway.app/ouvir", {
+      const res = await fetch("https://summerjobcaixa-pixporvoz-1.onrender.com/ouvir", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -170,7 +170,7 @@ export const VoiceStartPage = () => {
 
   // === ÁUDIO ===
   const tocarAudioBackend = (audioUrl) => {
-    const audio = new Audio(`https://summerjobcaixa-pixporvoz-production-64ac.up.railway.app${audioUrl}`);
+    const audio = new Audio(`https://summerjobcaixa-pixporvoz-1.onrender.com${audioUrl}`);
     audio.playbackRate = voiceSpeedRef.current;
     audio.onended = () => { if (!awaitingConfirmRef.current) startListening(); };
     audio.play();
