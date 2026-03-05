@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 
 const AuthPage = () => {
-  const API_URL = "https://summerjobcaixa-pixporvoz-production.up.railway.app/api";
+  const API_URL = "https://summerjobcaixa-pixporvoz.onrender.com/api";
 
   {/**
     Estados para controle de fluxo, mensagens e campos do formulário
