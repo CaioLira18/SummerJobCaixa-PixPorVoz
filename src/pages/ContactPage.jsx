@@ -16,7 +16,7 @@ export const ContactPage = () => {
     }
 
     try {
-      const response = await fetch(`https://summerjobcaixa-pixporvoz-production.up.railway.app/api/users/list-by-ids`, {
+      const response = await fetch(`https://summerjobcaixa-pixporvoz.onrender.com/api/users/list-by-ids`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user.contactIds)
@@ -64,7 +64,7 @@ export const ContactPage = () => {
     setFoundUser(null);
 
     try {
-      const response = await fetch(`https://summerjobcaixa-pixporvoz-production.up.railway.app/api/users/search/${cleanCpf}`);
+      const response = await fetch(`https://summerjobcaixa-pixporvoz.onrender.com/api/users/search/${cleanCpf}`);
       if (response.ok) {
         const data = await response.json();
         setFoundUser(data);
@@ -100,7 +100,7 @@ export const ContactPage = () => {
     };
 
     try {
-      const response = await fetch(`https://summerjobcaixa-pixporvoz-production.up.railway.app/api/users/${storedUser.id}`, {
+      const response = await fetch(`https://summerjobcaixa-pixporvoz.onrender.com/api/users/${storedUser.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedData)
