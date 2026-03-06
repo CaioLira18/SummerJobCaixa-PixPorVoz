@@ -112,5 +112,9 @@ Devido à preocupação dos utilizadores com a segurança da voz, o projeto adot
 * Biometria Facial ou Digital. (Estudando Possibilidade)
 * Senha numérica.
 
+## Conta Teste
+- Email: teste@gmail.com
+- Senha: 123456
+
 
 *(CESAR Summer Job 2026.1)*
